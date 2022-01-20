@@ -161,7 +161,6 @@ Unless you're interested in your own parsing of the data, you normally wouldn't 
 | upstream | - | + | 0 |
 | upstream | - | - | from End |
 | true_intergenic | * | * | from Start |
-|-----------------|---|---|------------|
 
 But again, this is an internal detail that's taken care of by MeStudio, under the hood. Lastly, the 8th column reports the modified base found within the reading frame of the analyzed motif. When the eighth column displays a dot, it means that the motif returned a positive match in that category but it did not contain any modified base in the correct reading frame, or any modified base at all.
 
