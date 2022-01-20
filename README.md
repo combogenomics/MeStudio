@@ -221,7 +221,7 @@ python3.8 ms_replacR.py -out "/path/to/output_folder" -g "FSMMA_genomic.gff" -f 
 `MeStudio Core`
 
 ```
-mscheck -g "FSMMA_genomic.gff" -f "$FSMMA_genomic.fna" -m "$FSMMA_methylation.gff" -o path/to/output_dir --mo "motifs.txt" --cr "circular.txt"
+mscheck -g "FSMMA_genomic.gff" -f "FSMMA_genomic.fna" -m "FSMMA_methylation.gff" -o path/to/output_dir --mo "motifs.txt" --cr "circular.txt"
 msmine path/to/output_dir/params.ms
 msfasta path/to/output_dir/params.ms
 msmatch path/to/output_dir/params.ms
