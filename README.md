@@ -101,7 +101,65 @@ optional arguments:
 Now to process the files contained in the [toyset](/toyset/) folder, please check **Usage** at *Wizard Level*.
 
 ## MeStudio Core
-To add.
+
+MeStudio core is composed of five software components. These components match the nucleotide motifs to the genomic sequence and maps them to the corresponding category, which are extracted from the annotation file. Categories are defined as follows:
+- protein-coding gene with accordant (sense) strand (CDS)
+- discordant (antisense) strand (nCDS)
+- regions that fall between annotated genes (true intergenic, tIG)
+- regions upstream to the reading frame of a gene, with accordant strand (US)
+ 
+The components, which in the paper we refer to as executables, are called internally by the pipeline version of MeStudio, in the following order: mscheck, msmine, msfasta, msmatch, msx. There is one additional executable, msread, which gets never called and serves only for debugging purpose for the wizard user. Following is a detailed explanation of what each executable does.
+
+######mscheck
+mscheck requires four mandatory existing files, i.e., the genomic annotation, the genomic sequence, the methylated base calls, and a list containing the motifs to be scanned. It also expects a non-existing directory in which it will dump all the output. Through two optional arguments it is possible to specify the feature type that is to be extracted from the gff (default: gene) and the limit of nucleotides to include during the upstream category calculation. Note that 'gene' is the default feature type and it will ensure that all CDS fall within the reading frame of the gene, and that the intergenic regions will consist in regions that are between two neighboring and non-overlapping genes. It is highly recommended that if you use MeStudio core outside of a pipeline, you select a non existing name for the output argument in your current working directory. Among others, mscheck will produce a binary file called params.ms in the output directory. This file will serve as input for all the other executables that follow. Note that you cannot pass the directory tree to another user since params.ms stores the absolute paths. Run '''msread params.ms''' to see what's inside!
+
+######msmine
+msmine is intended to "mine" the genomic annotation and compute the four categories reported in the introductory paragraph. In order to do so it calculates the length of each input chromosome, and then uses this information to calculate the range of the upstream and/or intergenic regions that are flanking the first and last feature type (hopefully gene, as we keep default). The rest of the data is taken directly from the annotation file, which however was rendered in a binary version by mscheck to minimize the number of type castings and dynamic memory allocations. msmine populates the output directory with binary files which resemble GFF3 tables and contain nCDS, tIG and upstream information which will be used downstream by the other executables.
+
+######msfasta
+msfasta also requires the params.ms binary parameters file produced by mscheck, but it is only in charge of rendering the genomic sequence into a better computer-parsable format. Once again a binary file is written in the output directory.
+
+######msmatch
+The current implementation of msmatch uses a naive matching algorithm to map motif sequences to the reference genome. Albeit the number of comparisons in the worst case is O(m*(n-m+1)), we assumed that the amount of input meaningful motifs seldom exceeds a few dozen. Therefore, we did not make use of more optimized transforms or algorithms for pattern finding, and opted for the most straightforward one. During the naive matching phase, each replicon or chromosome gets loaded into memory in the form of an array of chars (or null terminated C-string) one at a time as both strands are scanned for the presence of the motif sequences, which can hold ambiguity characters. After you run msmatch you will find as many new directories as there were motifs, having each directory containing a binary file which holds motif matching information (such as start, end, strand and exact pattern that was matched). This information, together with the pre-computed categories will be utilized by the last executable in the pipeline, msx, to produce the final output.
+
+######msx
+The last-but-not-least executable is the one that checks whether the modified bases fall within patterns on the genomic sequence, and bins them by category. It performs several nested loop calculations and outputs a number of GFF3 files which report the methylation status in every category. A detailed explanation of the output produced by msx is reported in the following paragraph.
+
+######MeStudio core output
+msx produces GFF3 files that report the methylation status in every category. Following is a description of each of the nine fields:
+1. SequenceID		Replicon/Chromosome identifier
+2. Source		Normally this would report the algorithm or the procedure that generated this feature. MeStudio reports the category that holds the information (CDS, nCDS, true_intergenic or upstream)
+3. Feature Type		Describes what the feature is (default: gene)
+4. Feature Start	Start
+5. Feature End		End
+6. Score		Typically E-values for sequence similarity and P-values for predictions. MeStudio actually reports the distance from the beginning or end of the feature in its reading frame. When a motif is found but no methylation is present on the strand of interest, a 0 is placed instead of a positive integer
+7. Strand		The strand on which the methylation lies on. If no methylation is reported, it displays the strand the feature lies on
+8. Phase		The name of the (standard) methylated base found in within that motif. When a motif is found but no methylation is present on the strand of interest, a "." is placed instead of a letter
+9. Attributes		MeStudio only reports the locus tag of the region in which the motif is found. For CDS and nCDS category this would be the locus tag of the gene that stretches between Feature Start and Feature End. For upstream category this reports the locus tag of the gene to which the region of interest is upstream to, whereas for a true_intergenic category it reports its rightmost gene.
+
+Unless you're interested in your own parsing of the data, you normally wouldn't worry about the binaries and text files that MeStudio core produces, since its output is processed by ms_analyzR. Just so you know, however, we'd like to clarify what columns 6 and 8 report. Column 6 (Score) reports an unsigned integer that represents the distance of the methylated base from the start of the gene it associates with, in its correct reading frame. For example, if you're looking at a CDS GFF3, any methylated base that falls within a gene stretch on the positive strand, and both the gene and the methylation are on the "Plus" strand, you would see the distance from the end of such gene (Feature End). Instead, if the methylation is found on the reverse strand, and also the gene it was found on has its reading frame on the "Minus" strand, then you would see the distance calculated from the beginning of the gene (Feature Start), since it "makes sense" when in its reverse complement form. The distance calculation can be summed up in the following table:
+
+
+| Feature | Strand | Methylation | distance |
+|---------|--------|-------------|----------|
+| CDS | + |	+ | from End |
+|-----|---|---|----------|
+| CDS			+	-		0
+| CDS			-	+		0
+| CDS			-	-		from Start
+| nCDS			+	+		0
+| nCDS                    +	-		from End
+| nCDS                    -	+		from Start
+| nCDS                    -	-		0
+| upstream                +	+		from Start
+| upstream                +	-		0
+| upstream                -	+		0
+| upstream                -	-		from End
+| true_intergenic		*	*		from Start
+
+But again, this is an internal detail that's taken care of by MeStudio, under the hood. Lastly, the 8th column reports the modified base found within the reading frame of the analyzed motif. When the eighth column displays a dot, it means that the motif returned a positive match in that category but it did not contain any modified base in the correct reading frame, or any modified base at all.
+
+
 ## MeStudio AnalyzR
 MeStudio also implements a post-processing python-based script named ms_analyzR which has to be run on the four GFF3 MeStudio-deriving files. 
 In addition, for comparative genomic analyses a “gene_presence_abscence.csv” file produced by [Roary](https://sanger-pathogens.github.io/Roary/) can be used to
