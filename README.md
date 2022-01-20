@@ -149,7 +149,6 @@ Unless you're interested in your own parsing of the data, you normally wouldn't 
 | Feature | Strand | Methylation | distance |
 |---------|--------|-------------|----------|
 | CDS | + |	+ | from End |
-|-----|---|---|----------|
 | CDS | + |	-	|	0 |
 |-----|---|---|---|
 | CDS | - |	+	|	0 |
