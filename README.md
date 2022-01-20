@@ -232,6 +232,11 @@ msx path/to/output_dir/params.ms
 ```
 python3.8 ms_analyzR.py -out "/path/to/output_folder" -cds "CDS.gff" -ncds "nCDS.gff" -inter "true_intergenic.gff" -ups "upstream.gff" -rr "gene_presence_absence.csv" -split -evo
 ```
+`ms_circ`
+```
+Rscript ms_circ.R
+```
+
 
 ## Results
 ## Reference
