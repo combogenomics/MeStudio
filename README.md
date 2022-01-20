@@ -20,14 +20,12 @@ MeStudio connects several procedural software components that can be run either 
 Hey sorcerer's apprentice, we know.. You got a lot to work so you may have no time to read all the sorcerer's book.
 Please, feel free to directly click on "Usage" and check the *bard-way* to run MeStudio. All's gonna work in a wand flight. 
 
-Inside the [toyset](/toyset/) folder you are going to find three files needed to start the analysis:
-
-- FSMMA_genomic.fna
-- FSMMA_genomic.gff
-- FSMMA_methylation.gff
+Inside the [toyset](/toyset/) folder you are going to find the three files needed to start the analysis:
 
 ```FSMMA_genomic.fna``` is the the genome of FSMMA strain of *Sinorhizobium meliloti*. You can get more informations [here](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/382/?utm_source=None&utm_medium=referral&utm_campaign=KnownItemSensor:taxname).
+
 ```FSMMA_genomic.gff``` is the product of the genomic annotation (executed via [Prokka](https://github.com/tseemann/prokka) annotator). The file is reported in GFF3 format.
+
 ```FSMMA_methylation.gff``` is the GFF3 file with methylation positions obtained through the sequencer. We performed the analysis using the PacBio RT-SMRT sequencing.
 
 N.B. please note that Prokka and Roary (see *Usage*) can be easily found to [Galaxy](https://usegalaxy.org), the installation of these tools is not strictly needed.
