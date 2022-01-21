@@ -190,10 +190,10 @@ optional arguments:
   -split, --split_features
                         Rearrange your input GFFs for chromosomes (OPTIONAL)
 ```
-The `split` flag saves into the output directory the GFFs at “chromosome level” rather than “feature level”. Each GFF produced will be characterized not for
+The `-split` flag saves into the output directory the GFFs at “chromosome level” rather than “feature level”. Each GFF produced will be characterized not for
 feature (CDS, nCDS, true intergenic and upstream) but by chromosomes (or contigs), maintaining the MeStudio Core derived contents and layout. 
 
-The `prt` flag produces a BED file for each feature in which is reported: 
+The `-prt` flag produces a BED file for each feature in which is reported: 
 - the chrom column, with the name of each chromosome or contig
 - start of the feature
 - end of the feature
