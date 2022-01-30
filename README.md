@@ -210,6 +210,19 @@ Now to process the files contained in the [toyset](/toyset/) folder, please chec
 
 ###### Bard Level
 
+Once you have downloaded the [src](/src/) folder content, you have to make `install` executable by typing:
+```
+chmod +x install
+```
+Then you can simply install it with the following command:
+```
+sudo ./install
+```
+Ok, now you're ready to launch `mestudio`. Simply type:
+```
+mestudio
+```
+
 ###### Wizard Level
 From [src](/src/) folder you can download all the scripts needed to perform the analysis to wizard level.
 Here down below you have a step by step process assuming that you are using the files contained into the [toyset](/toyset/) folder and a Linux-based OS.
