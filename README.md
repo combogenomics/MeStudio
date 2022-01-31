@@ -372,13 +372,13 @@ Parsing -ups file..
 
 [[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_ncds_scatterplot.png|alt=octocat]]
 
-[[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_intergenic_scatterplot.png|alt=octocat]]
+[[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_intergenic_scatterplot.png]]
 
-[[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_upstream_scatterplot.png|alt=octocat]]
+(https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_upstream_scatterplot.png)
 
 *Circular plot*
 
-[https://github.com/combogenomics/MeStudio/tree/main/pics/FSMMA_circ.pdf|alt=octocat]
+(https://github.com/combogenomics/MeStudio/tree/main/pics/FSMMA_circ.pdf)
 
 
 ## Reference
