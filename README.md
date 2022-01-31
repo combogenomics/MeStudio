@@ -378,7 +378,7 @@ Parsing -ups file..
 
 *Circular plot*
 
-(https://github.com/combogenomics/MeStudio/tree/main/pics/FSMMA_circ.pdf)
+[this](https://github.com/combogenomics/MeStudio/tree/main/pics/FSMMA_circ.pdf)
 
 
 ## Reference
