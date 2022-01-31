@@ -214,7 +214,7 @@ Once you have downloaded the [src](/src/) folder content, you have to make `inst
 ```
 chmod +x install
 ```
-Then you can simply install it with the following command:
+Then you can install it with the following command:
 ```
 sudo ./install
 ```
@@ -309,8 +309,9 @@ msx path/to/output_dir/params.ms
 
 `ms_analyzR`
 ```
-python3.8 ms_analyzR.py -out "/path/to/output_folder" -cds "CDS.gff" -ncds "nCDS.gff" -inter "true_intergenic.gff" -ups "upstream.gff" -rr "gene_presence_absence.csv" -split -evo
+python3.8 ms_analyzR.py -out "/path/to/output_folder" -cds "FSMMA_CDS.gff" -ncds "FSMMA_nCDS.gff" -inter "FSMMA_true_intergenic.gff" -ups "FSMMA_upstream.gff" -rr "gene_presence_absence.csv" -split -evo
 ```
+
 `ms_circ`
 ```
 Rscript ms_circ.R
