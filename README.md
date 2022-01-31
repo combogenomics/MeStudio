@@ -222,6 +222,72 @@ Ok, now you're ready to launch `mestudio`. Simply type:
 ```
 mestudio
 ```
+And you'll get:
+```
+Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str> -i <char> -o <char>]
+
+Mandatory arguments
+-f    <str>           genomic sequence file
+-g    <str>           genomic annotation file
+-Me   <str>           methylated base calls file
+-mo   <str>           newline delimited motifs list
+-out  <str>           output directory
+
+Optional arguments
+-rr   <str>          "gene_presence_absence.csv" file produced by Roary
+-i    <char>          input character to replace
+-o    <char>          output character to replace
+```
+Once this is done, you are going to find all the results inside the directory you started the analysis from. Here's reported a "tree visualization" of the directories hierarchy.
+
+```
+├── FSMMA_genomic.fasta
+├── FSMMA_genomic.gff
+├── FSMMA_methylation.gff
+├── gene_presence_absence.csv
+├── motifs.txt
+└── replout
+    ├── core
+    │   ├── GANTC
+    │   │   ├── GANTC_CDS.gff
+    │   │   ├── GANTC.ms
+    │   │   ├── GANTC_nCDS.gff
+    │   │   ├── GANTC_true_intergenic.gff
+    │   │   ├── GANTC_upstream.gff
+    │   │   └── results
+    │   │       ├── evo_CDS.bed
+    │   │       ├── evo_intergenic.bed
+    │   │       ├── evo_nCDS.bed
+    │   │       ├── evo_upstream.bed
+    │   │       ├── results_cds_scatterplot.png
+    │   │       ├── results_intergenic_scatterplot.png
+    │   │       ├── results_ncds_scatterplot.png
+    │   │       ├── results_upstream_scatterplot.png
+    │   │       └── Rplots.pdf
+    │   ├── genomic_fasta.ms
+    │   ├── genomic.ms
+    │   ├── matches.ms
+    │   ├── nCDS.ms
+    │   ├── params.ms
+    │   ├── sequencer.ms
+    │   ├── true_intergenic.ms
+    │   └── upstream.ms
+    ├── ms_circ.R
+
+```
+Where:
+`FSMMA_genomic.fasta`, `FSMMA_genomic.gff`, `FSMMA_methylation.gff` are the file inside [toyset](/toyset/) folder.
+
+`gene_presence_absence.csv` is the file produced by Roary with proteins annotation.
+
+`motifs.txt` is the text file containing all the motifs you want to look for in the genome. In the above example we used GANTC motif only.
+
+`replout`, `core`, `results` are the directories created respectively from `ms_replacR`, `ms_core` and `ms_analyzR`. Inside these folders you can find the newly produced tabular files as GFFs and BEDs.
+
+All the files with `.ms` extension are produced by `ms_core`.
+
+Jump to *Results* chapter to see the images produced by *MeStudio*.
+
 
 ###### Wizard Level
 From [src](/src/) folder you can download all the scripts needed to perform the analysis to wizard level.
@@ -252,4 +318,7 @@ Rscript ms_circ.R
 
 
 ## Results
+
+
+
 ## Reference
