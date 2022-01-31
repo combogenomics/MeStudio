@@ -365,6 +365,7 @@ Parsing -ups file..
 | 000000F_arrow | 7237 | 7920 | JPHAALHC_00008 | 1 | HTH-type transcriptional regulator CmtR
 | 000000F_arrow | 11274 | 11780 | JPHAALHC_00012 | 1 | hypothetical protein
 | 000000F_arrow | 12999 | 16460 | JPHAALHC_00014 | 3 | Chromosome partition protein Smc
+| ... | ... | ... | ... | ... | ... |
 
 *Distributions*
 
