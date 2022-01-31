@@ -320,6 +320,65 @@ Rscript ms_circ.R
 
 ## Results
 
+`ms_analyzR` produces four different type of results: statistics, tabular, distributions and circular plot.
+
+Here down below are reported these results.
+
+*Statistics*
+```
+Total number of FOUND genes: 7159
+Parsing -cds file..
+	 Total number of METHYLATED genes: 4193 (58.57 %)
+	 Total number of METHYLATIONS found: 8721
+	 Max number of methylations found: 17 on gene JPHAALHC_06173
+	 Roary annotation: JPHAALHC_06173 = hypothetical protein -> Core genome
+
+
+Parsing -ncds file..
+	 Total number of METHYLATED genes: 4193 (58.57 %)
+	 Total number of METHYLATIONS found: 8726
+	 Max number of methylations found: 17 on gene JPHAALHC_06173
+	 Roary annotation: JPHAALHC_06173 = hypothetical protein -> Core genome
+
+
+Parsing -inter file..
+	 Total number of METHYLATED regions: 1590 (22.21 %)
+	 Total number of METHYLATIONS found: 2500
+	 Max number of methylations found: 14 on gene JPHAALHC_02514
+	 Roary annotation: JPHAALHC_02514 = Acetoacetyl-CoA reductase -> Core genome
+
+
+Parsing -ups file..
+	 Total number of METHYLATED regions: 2719 (37.98 %)
+	 Total number of METHYLATIONS found: 13761
+	 Max number of methylations found: 84 up to gene JPHAALHC_03228
+	 Roary annotation: JPHAALHC_03228 = Motility protein A -> Core genome
+```
+
+*Tabular*
+
+| chrom | chromStart | chromEnd | name | score | protein |
+|-------|------------|----------|------|-------|--------|
+| 000000F_arrow |	1319 | 2620 |	JPHAALHC_00003 | 2 | putative zinc protease
+| 000000F_arrow | 5122 | 6228 | JPHAALHC_00006 | 1 | hypothetical protein
+| 000000F_arrow | 6357 | 7052 | JPHAALHC_00007 | 3 | 6-phosphogluconate phosphatase
+| 000000F_arrow | 7237 | 7920 | JPHAALHC_00008 | 1 | HTH-type transcriptional regulator CmtR
+| 000000F_arrow | 11274 | 11780 | JPHAALHC_00012 | 1 | hypothetical protein
+| 000000F_arrow | 12999 | 16460 | JPHAALHC_00014 | 3 | Chromosome partition protein Smc
+
+*Distributions*
+
+[[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_cds_scatterplot.png|alt=octocat]]
+
+[[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_ncds_scatterplot.png|alt=octocat]]
+
+[[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_intergenic_scatterplot.png|alt=octocat]]
+
+[[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_upstream_scatterplot.png|alt=octocat]]
+
+*Circular plot*
+
+[[https://github.com/combogenomics/MeStudio/tree/main/pics/FSMMA_circ.pdf|alt=octocat]]
 
 
 ## Reference
