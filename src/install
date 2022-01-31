@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "Compiling core executables (using gcc [https://gcc.gnu.org/])"
+gcc mscheck.c -o mscheck -D_FORTIFY_SOURCE=2 -fasynchronous-unwind-tables -fstack-protector-all -g -O3 -Wall
+gcc msmine.c -o msmine -D_FORTIFY_SOURCE=2 -fasynchronous-unwind-tables -fstack-protector-all -g -O3 -Wall
+gcc msfasta.c -o msfasta -D_FORTIFY_SOURCE=2 -fasynchronous-unwind-tables -fstack-protector-all -g -O3 -Wall
+gcc msmatch.c -o msmatch -D_FORTIFY_SOURCE=2 -fasynchronous-unwind-tables -fstack-protector-all -g -O3 -Wall
+gcc msx.c -o msx -D_FORTIFY_SOURCE=2 -fasynchronous-unwind-tables -fstack-protector-all -g -O3 -Wall
+gcc msread.c -o msread -D_FORTIFY_SOURCE=2 -fasynchronous-unwind-tables -fstack-protector-all -g -O3 -Wall
+
+sed -i "s@INSTALLATION_DIR=6b5b40be4a3cbb5d12b5744a7174b781@INSTALLATION_DIR=${PWD}@" mestudio
+chmod +x mestudio
+chmod +x reset
+err=$(cp mestudio /bin/ 2>&1 >/dev/null)
+if [ "$err" ]; then
+	echo "Warning: make sure you manually add this directory as environment variable!"
+fi
+#MD5="6b5b40be4a3cbb5d12b5744a7174b781"

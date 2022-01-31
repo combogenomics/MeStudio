@@ -1,0 +1,138 @@
+#!/bin/bash
+
+## installation_dir holds the entire path to the scripts and binaries
+## You either install automatically, or manually.
+## When installing manually make sure you also add the installation directory
+## to your PATH [https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path]
+## Linux script provided by Univeristy of Florence; The Florence Computational Biology Group;
+## https://www.bio.unifi.it/vp-175-our-research.html
+
+INSTALLATION_DIR=6b5b40be4a3cbb5d12b5744a7174b781
+#MD5="6b5b40be4a3cbb5d12b5744a7174b781"
+replacer="$INSTALLATION_DIR/ms_replacR.py"
+mscheck="$INSTALLATION_DIR/mscheck"
+msmine="$INSTALLATION_DIR/msmine"
+msfasta="$INSTALLATION_DIR/msfasta"
+msmatch="$INSTALLATION_DIR/msmatch"
+msx="$INSTALLATION_DIR/msx"
+analyzer="$INSTALLATION_DIR/ms_analyzR.py"
+circ="$INSTALLATION_DIR/ms_circ.R"
+
+POSITIONAL_ARGS=()
+print_help () {
+  echo "Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str> -i <char> -o <char>]"
+  echo 
+  echo "Mandatory arguments"
+  echo "-f    <str>           genomic sequence file"
+  echo "-g    <str>           genomic annotation file"
+  echo "-Me   <str>           methylated base calls file"
+  echo "-mo   <str>           newline delimited motifs list"
+  echo "-out  <str>           output directory"
+  echo
+  echo "Optional arguments"
+  echo "-rr   <str>          \"gene_presence_absence.csv\" file produced by Roary"
+  echo "-i    <char>          input character to replace"
+  echo "-o    <char>          output character to replace"
+}
+
+argc=0
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -f)
+      GENOMIC_FASTA=$(readlink -m "$2")
+      ((argc++))
+      shift
+      shift
+      ;;
+    -g)
+      GENOMIC_GFF=$(readlink -m "$2")
+      shift
+      shift
+      ((argc++))
+      ;;
+    -Me)
+      METHYLATION_GFF=$(readlink -m "$2")
+      shift
+      shift
+      ((argc++))
+      ;;
+    -mo)
+      MOTIFS_FILE=$(readlink -m "$2")
+      shift
+      shift
+      ((argc++))
+      ;;
+    -rr)
+      ROARY_FILE=$(readlink -m "$2")
+      shift
+      shift
+      ((argc++))
+      ;;
+    -out)
+      OUTPUT_DIR="$2"
+      shift
+      shift
+      ((argc++))
+      ;;
+    -i)
+      INPUT_CHAR="$2"
+      shift
+      shift
+      ((argc++))
+      ;;
+    -o)
+      OUTPUT_CHAR="$2"
+      shift
+      shift
+      ((argc++))
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      print_help
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1")
+      shift # past argument
+      ;;
+  esac
+done
+
+## print help if script is called with no args
+if [ "$argc" -eq 0 ]; then 
+  print_help
+  exit 1
+fi
+
+set -- "${POSITIONAL_ARGS[@]}"
+
+python3 "$replacer" -out "$OUTPUT_DIR" -g "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -Me "$METHYLATION_GFF" -i "$INPUT_CHAR" -o "$OUTPUT_CHAR"
+
+base_genomic_gff=$(basename "$GENOMIC_GFF")
+base_methylation_gff=$(basename "$METHYLATION_GFF")
+base_genomic_fasta=$(basename "$GENOMIC_FASTA")
+
+cd "$OUTPUT_DIR"
+
+GENOMIC_GFF=$(readlink -m "$base_genomic_gff")
+METHYLATION_GFF=$(readlink -m "$base_methylation_gff")
+GENOMIC_FASTA=$(readlink -m "$base_genomic_fasta")
+
+"$mscheck" -g "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -m "$METHYLATION_GFF" -o mscore --mo "$MOTIFS_FILE"
+"$msmine" mscore/params.ms
+"$msfasta" mscore/params.ms
+"$msmatch" mscore/params.ms
+"$msx" mscore/params.ms
+
+cd mscore
+
+mapfile -t motifs< <(sed 's/\r//g' "$MOTIFS_FILE" | sort | uniq)
+for i in "${motifs[@]}"; do
+	echo Working on Motif: "$i"
+	cd "$i"
+	python3 "$analyzer" -out "results" -cds "$i""_CDS.gff" -ncds "$i""_nCDS.gff" -inter "$i""_true_intergenic.gff" -ups "$i""_upstream.gff"
+	cd results
+	Rscript "$circ"
+	cd ..
+	cd ..
+done

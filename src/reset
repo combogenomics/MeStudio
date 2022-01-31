@@ -1,0 +1,3 @@
+#!/bin/bash
+## Reset mestudio directories (say you want to install it in a different directory)
+sed -i '0,/INSTALLATION_DIR=.*/s//INSTALLATION_DIR=6b5b40be4a3cbb5d12b5744a7174b781/' mestudio
