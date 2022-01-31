@@ -368,16 +368,9 @@ Parsing -ups file..
 
 *Distributions*
 
-![cds_image](https://github.com/combogenomics/MeStudio/tree/main/pics/sc_cds.svg)
-
-![ncds_image]([https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_ncds_scatterplot.svg)
-
-![intergenic_image](https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_intergenic_scatterplot.svg)
-
-![upstream_image](https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_upstream_scatterplot.svg)
 
 *Circular plot*
 
-![circular_image](https://github.com/combogenomics/MeStudio/tree/main/pics/FSMMA_circ.svg)
+
 
 ## Reference
