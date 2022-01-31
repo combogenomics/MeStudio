@@ -374,11 +374,10 @@ Parsing -ups file..
 
 [[https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_intergenic_scatterplot.png]]
 
-(https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_upstream_scatterplot.png)
+![upstream_image](https://github.com/combogenomics/MeStudio/tree/main/pics/GANTC_analyzed_upstream_scatterplot.png)
 
 *Circular plot*
 
-![this](https://github.com/combogenomics/MeStudio/tree/main/pics/FSMMA_circ.pdf)
 
 
 ## Reference
