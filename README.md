@@ -34,9 +34,11 @@ Optional arguments
 
 ## Installing MeStudio
 
+Hey sorcerer's apprentice, we know.. You got a lot to work so you may have no time to read all the sorcerer's book.
+Check the *bard-way* to run MeStudio. All's gonna work in a wand flight. 
+
 ###### Bard Level
 
-Please feel free to use the files contained in the [dataset](/dataset/) folder to start a trial analysis or directly use your own.
 You have to render `install` executable by typing:
 ```
 chmod +x install
@@ -67,7 +69,9 @@ Optional arguments
 -i    <char>          input character to replace
 -o    <char>          output character to replace
 ```
-Once this is done, you are going to find all the results inside the directory you started the analysis from. Here's reported a "tree visualization" of the directories hierarchy, assuming that you downloaded the files from the [dataset](/dataset/) folder. 
+Please feel free to use the files contained in the [dataset](/dataset/) folder to start a trial analysis or you can directly use your own.
+
+Once this is done, you are going to find all the results inside the directory you started the analysis from. Here's reported a "tree visualization" of the directories hierarchy, assuming that you downloaded the files from the [dataset](/dataset/). 
 
 ```
 ├── FSMMA_genomic.fasta
@@ -147,9 +151,6 @@ Rscript ms_circ.R
 ```
 
 ## Testing MeStudio Pipeline
-
-Hey sorcerer's apprentice, we know.. You got a lot to work so you may have no time to read all the sorcerer's book.
-Please, feel free to directly click on "Installing MeStudio" and check the *bard-way* to run MeStudio. All's gonna work in a wand flight. 
 
 Inside the [dataset](/dataset/) folder you are going to find the three files needed to start the analysis:
 
