@@ -45,23 +45,7 @@ Then you can install it with the following command:
 ```
 sudo ./install
 ```
-If you don't have the administrator privileges, please add the directory in which executables are present to the `$PATH`.
-
-###### How do I add a certain folder to the path?
-First thing first, copy the path you want to add. From the directory of your interest, type `pwd` and copy the outcome. If you're working with Ubuntu, from the `/home/` path please type:
-```
-nano .bashrc
-```
-For Mac users:
-```
-nano .bash_profile
-```
-Then you have to add the previously obtained path by typing:
-
-```
-export PATH="/path/you/want/to/add/:$PATH"
-```
-Now `ctrl o + enter` to save and `ctrl x + enter` to exit. Then `source .bashrc` and that's it!
+If you don't have the administrator privileges, please add the directory in which executables are present to the `$PATH`. [Here](https://linuxize.com/post/how-to-add-directory-to-path-in-linux/) you can find how to do it.
 
 Ok, now you're ready to launch `mestudio`. Simply type:
 ```
