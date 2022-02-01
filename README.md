@@ -2,33 +2,180 @@
 MeStudio is a tool which allows us to analyse and combine genome-wide methylation profiles with genomic features.
 MeStudio connects several procedural software components that can be run either individually or as part of a pipeline.
 
+When you run MeStudio as a pipeline (see *Installing MeStudio*, `./mestudio -h`) it automatically calls all the scripts and executables it needs to perform genome-wide methylation profiles analysis. Running MeStudio this way is fairly easy:
+
+```
+Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str> -i <char> -o <char>]
+
+Mandatory arguments
+-f    <str>           genomic sequence file
+-g    <str>           genomic annotation file
+-Me   <str>           methylated base calls file
+-mo   <str>           newline delimited motifs list
+-out  <str>           output directory
+
+Optional arguments
+-rr   <str>          "gene_presence_absence.csv" file produced by Roary
+-i    <char>          input character to replace
+-o    <char>          output character to replace
+```
+
 *MeStudio version 1.0*
 
 ## Table of Contents
 
-- [Quick start](#Quick-start)
+- [Installing MeStudio](#Installing MeStudio)
+- [Testing MeStudio Pipeline](#Testing MeStudio Pipeline)
 - [MeStudio ReplacR](#MeStudio-ReplacR)
 - [MeStudio Core](#MeStudio-Core)
 - [MeStudio AnalyzR](#MeStudio-AnalyzR)
-- [Usage](#Usage)
 - [Results](#Results)
 - [Reference](#Reference)
 
+## Installing MeStudio
 
-## Quick start
+###### Bard Level
+
+Please feel free to use the files contained in the [dataset](/dataset/) folder to start a trial analysis or directly use your own.
+You have to render `install` executable by typing:
+```
+chmod +x install
+```
+Then you can install it with the following command:
+```
+sudo ./install
+```
+If you don't have the administrator privileges, please add the directory in which executables are present to the `$PATH`.
+
+###### How do I add a certain folder to the path?
+First thing first, copy the path you want to add. From the directory of your interest, type `pwd` and copy the outcome. If you're working with Ubuntu, from the `/home/` path please type:
+```
+nano .bashrc
+```
+For Mac users:
+```
+nano .bash_profile
+```
+Then you have to add the previously obtained path by typing:
+
+```
+export PATH="/path/you/want/to/add/:$PATH"
+```
+Now `ctrl o + enter` to save and `ctrl x + enter` to exit. Then `source .bashrc` and that's it!
+
+Ok, now you're ready to launch `mestudio`. Simply type:
+```
+mestudio
+```
+And you'll get:
+```
+Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str> -i <char> -o <char>]
+
+Mandatory arguments
+-f    <str>           genomic sequence file
+-g    <str>           genomic annotation file
+-Me   <str>           methylated base calls file
+-mo   <str>           newline delimited motifs list
+-out  <str>           output directory
+
+Optional arguments
+-rr   <str>          "gene_presence_absence.csv" file produced by Roary
+-i    <char>          input character to replace
+-o    <char>          output character to replace
+```
+Once this is done, you are going to find all the results inside the directory you started the analysis from. Here's reported a "tree visualization" of the directories hierarchy, assuming that you downloaded the files from the [dataset](/dataset/) folder. 
+
+```
+├── FSMMA_genomic.fasta
+├── FSMMA_genomic.gff
+├── FSMMA_methylation.gff
+├── gene_presence_absence.csv
+├── motifs.txt
+└── replout
+    ├── core
+    │   ├── GANTC
+    │   │   ├── GANTC_CDS.gff
+    │   │   ├── GANTC.ms
+    │   │   ├── GANTC_nCDS.gff
+    │   │   ├── GANTC_true_intergenic.gff
+    │   │   ├── GANTC_upstream.gff
+    │   │   └── results
+    │   │       ├── evo_CDS.bed
+    │   │       ├── evo_intergenic.bed
+    │   │       ├── evo_nCDS.bed
+    │   │       ├── evo_upstream.bed
+    │   │       ├── results_cds_scatterplot.png
+    │   │       ├── results_intergenic_scatterplot.png
+    │   │       ├── results_ncds_scatterplot.png
+    │   │       ├── results_upstream_scatterplot.png
+    │   │       └── Rplots.pdf
+    │   ├── genomic_fasta.ms
+    │   ├── genomic.ms
+    │   ├── matches.ms
+    │   ├── nCDS.ms
+    │   ├── params.ms
+    │   ├── sequencer.ms
+    │   ├── true_intergenic.ms
+    │   └── upstream.ms
+    ├── ms_circ.R
+
+```
+Where:
+`FSMMA_genomic.fasta`, `FSMMA_genomic.gff`, `FSMMA_methylation.gff` are the files containing respectevely the genome, genome's annotation and methylation data. 
+
+`gene_presence_absence.csv` is the file produced by Roary with proteins annotation.
+
+`motifs.txt` is the text file containing all the motifs you want to look for in the genome. In the above example we used GANTC motif only.
+
+`replout`, `core`, `results` are the directories created respectively from `ms_replacR`, `ms_core` and `ms_analyzR`. Inside these folders you can find the newly produced tabular files as GFFs and BEDs.
+
+All the files with `.ms` extension are produced by `ms_core`.
+
+Jump to the *Results* chapter to see the images produced by *MeStudio*.
+
+
+###### Wizard Level
+From the [src](/src/) folder you can download all the scripts needed to perform the analysis as wizard level.
+Below you have a step by step process assuming that you are using the files contained into the [dataset](/dataset/) folder and a Linux-based OS.
+
+`ms_replacR`
+```
+python3.8 ms_replacR.py -out "/path/to/output_folder" -g "FSMMA_genomic.gff" -f "FSMMA_genomic.fna" -Me "FSMMA_methylation.gff" -i "|" -o "_"
+```
+`MeStudio Core`
+
+```
+mscheck -g "FSMMA_genomic.gff" -f "FSMMA_genomic.fna" -m "FSMMA_methylation.gff" -o path/to/output_dir --mo "motifs.txt" --cr "circular.txt"
+msmine path/to/output_dir/params.ms
+msfasta path/to/output_dir/params.ms
+msmatch path/to/output_dir/params.ms
+msx path/to/output_dir/params.ms
+```
+
+`ms_analyzR`
+```
+python3.8 ms_analyzR.py -out "/path/to/output_folder" -cds "FSMMA_CDS.gff" -ncds "FSMMA_nCDS.gff" -inter "FSMMA_true_intergenic.gff" -ups "FSMMA_upstream.gff" -rr "gene_presence_absence.csv" -split -evo
+```
+
+`ms_circ`
+```
+Rscript ms_circ.R
+```
+
+## Testing MeStudio Pipeline
 
 Hey sorcerer's apprentice, we know.. You got a lot to work so you may have no time to read all the sorcerer's book.
-Please, feel free to directly click on "Usage" and check the *bard-way* to run MeStudio. All's gonna work in a wand flight. 
+Please, feel free to directly click on "Installing MeStudio" and check the *bard-way* to run MeStudio. All's gonna work in a wand flight. 
 
 Inside the [dataset](/dataset/) folder you are going to find the three files needed to start the analysis:
 
-```FSMMA_genomic.fna``` is the the genome of FSMMA strain of *Sinorhizobium meliloti*. You can get more informations [here](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/382/?utm_source=None&utm_medium=referral&utm_campaign=KnownItemSensor:taxname).
+```FSMMA_genomic.fna``` is the the genome of FSMMA strain of *Sinorhizobium meliloti*. You can get more information [here](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/382/?utm_source=None&utm_medium=referral&utm_campaign=KnownItemSensor:taxname).
 
 ```FSMMA_genomic.gff``` is the product of the genomic annotation (executed via [Prokka](https://github.com/tseemann/prokka) annotator). The file is reported in GFF3 format.
 
 ```FSMMA_methylation.gff``` is the GFF3 file with methylation positions obtained through the sequencer. We performed the analysis using the PacBio RT-SMRT sequencing.
 
-N.B. please note that Prokka and Roary (see *Usage*) can be easily found to [Galaxy](https://usegalaxy.org), the installation of these tools is not strictly needed.
+N.B. please note that Prokka and Roary (see *Installing MeStudio*) can be easily found to [Galaxy](https://usegalaxy.org), the installation of these tools is not strictly needed.
 
 
 ## MeStudio ReplacR
@@ -46,11 +193,11 @@ The last flags (.5 and .6) are used to communicate a certain character or string
 As a matter of fact MeStudio requires consistent formatting as far as the sequence identifiers are concerned but sometimes the annotation process can lead to
 genomic headers alterations for what concerns “seqid” fields identity and special characters (e.g. a pipe symbol replaced by the underscore).
 
-An example is reported here down below:
+An example is reported below:
 
 ```FSMMA_genomic.fna```
 
-> >000000F|arrow
+> 000000F|arrow
 > 
 > GCCGGTCCAGCGCAAAACCCTCGCTCGGCGTGATCGAGAGTATGCGCTGCGAGCCGAGGT
 > CGGGCCAGAAGAGCTTCGAATTCACGAGCCGGAAATGCGGTGCGACGATAACGCGTTCGA
@@ -64,8 +211,8 @@ An example is reported here down below:
 As you can see, the header of the fasta file has a pipe as delimeter while the *seqname* column of the GFF3 file as the underscore as delimeter.
 This difference in the formatting syntax can create some troubles and here the last flags are crucial to fix the problem.
 
-More over, depending on the annotator, we noticed that sometimes we can find different order of the contigs between fasta and GFF3 files.
-*ms_replacR* also fix this kind of anomaly in order to avoid biased results.
+Moreover, depending on the annotator, we noticed that sometimes the order in which seqids are found, both in the GFF and fasta, differs.
+*ms_replacR* also fixes this kind of anomaly in order to avoid biased results.
 
 
 ###### How do I run ms_replacR?
@@ -96,7 +243,7 @@ optional arguments:
                         Element to insert [SYMBOL/STRING]
  ```
 
-Now to process the files contained in the [toyset](/toyset/) folder, please check **Usage** at *Wizard Level*.
+Now to process the files contained in the [dataset](/dataset/) folder, please check **Installing MeStudio** at *Wizard Level*.
 
 ## MeStudio Core
 
@@ -204,125 +351,14 @@ The `-prt` flag produces a BED file for each feature in which is reported:
 As well as being significant, the information contained in BED files are directly related to an R script (see [src](/src/)) which plots the distribution of the
 methylation density for each feature analysed making use of the r-package [circlize](https://jokergoo.github.io/circlize_book/book/). 
 
-Now to process the files contained in the [toyset](/toyset/) folder, please check **Usage** at *Wizard Level*.
-
-## Usage
-
-###### Bard Level
-
-Once you have downloaded the [src](/src/) folder content, you have to make `install` executable by typing:
-```
-chmod +x install
-```
-Then you can install it with the following command:
-```
-sudo ./install
-```
-Ok, now you're ready to launch `mestudio`. Simply type:
-```
-mestudio
-```
-And you'll get:
-```
-Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str> -i <char> -o <char>]
-
-Mandatory arguments
--f    <str>           genomic sequence file
--g    <str>           genomic annotation file
--Me   <str>           methylated base calls file
--mo   <str>           newline delimited motifs list
--out  <str>           output directory
-
-Optional arguments
--rr   <str>          "gene_presence_absence.csv" file produced by Roary
--i    <char>          input character to replace
--o    <char>          output character to replace
-```
-Once this is done, you are going to find all the results inside the directory you started the analysis from. Here's reported a "tree visualization" of the directories hierarchy.
-
-```
-├── FSMMA_genomic.fasta
-├── FSMMA_genomic.gff
-├── FSMMA_methylation.gff
-├── gene_presence_absence.csv
-├── motifs.txt
-└── replout
-    ├── core
-    │   ├── GANTC
-    │   │   ├── GANTC_CDS.gff
-    │   │   ├── GANTC.ms
-    │   │   ├── GANTC_nCDS.gff
-    │   │   ├── GANTC_true_intergenic.gff
-    │   │   ├── GANTC_upstream.gff
-    │   │   └── results
-    │   │       ├── evo_CDS.bed
-    │   │       ├── evo_intergenic.bed
-    │   │       ├── evo_nCDS.bed
-    │   │       ├── evo_upstream.bed
-    │   │       ├── results_cds_scatterplot.png
-    │   │       ├── results_intergenic_scatterplot.png
-    │   │       ├── results_ncds_scatterplot.png
-    │   │       ├── results_upstream_scatterplot.png
-    │   │       └── Rplots.pdf
-    │   ├── genomic_fasta.ms
-    │   ├── genomic.ms
-    │   ├── matches.ms
-    │   ├── nCDS.ms
-    │   ├── params.ms
-    │   ├── sequencer.ms
-    │   ├── true_intergenic.ms
-    │   └── upstream.ms
-    ├── ms_circ.R
-
-```
-Where:
-`FSMMA_genomic.fasta`, `FSMMA_genomic.gff`, `FSMMA_methylation.gff` are the file inside [toyset](/toyset/) folder.
-
-`gene_presence_absence.csv` is the file produced by Roary with proteins annotation.
-
-`motifs.txt` is the text file containing all the motifs you want to look for in the genome. In the above example we used GANTC motif only.
-
-`replout`, `core`, `results` are the directories created respectively from `ms_replacR`, `ms_core` and `ms_analyzR`. Inside these folders you can find the newly produced tabular files as GFFs and BEDs.
-
-All the files with `.ms` extension are produced by `ms_core`.
-
-Jump to *Results* chapter to see the images produced by *MeStudio*.
-
-
-###### Wizard Level
-From [src](/src/) folder you can download all the scripts needed to perform the analysis to wizard level.
-Here down below you have a step by step process assuming that you are using the files contained into the [toyset](/toyset/) folder and a Linux-based OS.
-
-`ms_replacR`
-```
-python3.8 ms_replacR.py -out "/path/to/output_folder" -g "FSMMA_genomic.gff" -f "FSMMA_genomic.fna" -Me "FSMMA_methylation.gff" -i "|" -o "_"
-```
-`MeStudio Core`
-
-```
-mscheck -g "FSMMA_genomic.gff" -f "FSMMA_genomic.fna" -m "FSMMA_methylation.gff" -o path/to/output_dir --mo "motifs.txt" --cr "circular.txt"
-msmine path/to/output_dir/params.ms
-msfasta path/to/output_dir/params.ms
-msmatch path/to/output_dir/params.ms
-msx path/to/output_dir/params.ms
-```
-
-`ms_analyzR`
-```
-python3.8 ms_analyzR.py -out "/path/to/output_folder" -cds "FSMMA_CDS.gff" -ncds "FSMMA_nCDS.gff" -inter "FSMMA_true_intergenic.gff" -ups "FSMMA_upstream.gff" -rr "gene_presence_absence.csv" -split -evo
-```
-
-`ms_circ`
-```
-Rscript ms_circ.R
-```
+Now to process the files contained in the [dataset](/dataset/) folder, please check **Installing MeStudio** at *Wizard Level*.
 
 
 ## Results
 
 `ms_analyzR` produces four different type of results: statistics, tabular, distributions and circular plot.
 
-Here down below are reported these results.
+Below are reported these results.
 
 *Statistics*
 ```
