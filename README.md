@@ -24,8 +24,8 @@ Optional arguments
 
 ## Table of Contents
 
-- [Installing MeStudio](#Installing MeStudio)
-- [Testing MeStudio Pipeline](#Testing MeStudio Pipeline)
+- [Installation](#Installing-MeStudio)
+- [Testing MeStudio Pipeline](#Testing-MeStudio-Pipeline)
 - [MeStudio ReplacR](#MeStudio-ReplacR)
 - [MeStudio Core](#MeStudio-Core)
 - [MeStudio AnalyzR](#MeStudio-AnalyzR)
