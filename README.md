@@ -20,7 +20,7 @@ MeStudio connects several procedural software components that can be run either 
 Hey sorcerer's apprentice, we know.. You got a lot to work so you may have no time to read all the sorcerer's book.
 Please, feel free to directly click on "Usage" and check the *bard-way* to run MeStudio. All's gonna work in a wand flight. 
 
-Inside the [toyset](/toyset/) folder you are going to find the three files needed to start the analysis:
+Inside the [dataset](/dataset/) folder you are going to find the three files needed to start the analysis:
 
 ```FSMMA_genomic.fna``` is the the genome of FSMMA strain of *Sinorhizobium meliloti*. You can get more informations [here](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/382/?utm_source=None&utm_medium=referral&utm_campaign=KnownItemSensor:taxname).
 
@@ -44,13 +44,13 @@ In order to properly run *MeStudio Core*, a pre-processing python-based script n
 
 The last flags (.5 and .6) are used to communicate a certain character or string to replace.
 As a matter of fact MeStudio requires consistent formatting as far as the sequence identifiers are concerned but sometimes the annotation process can lead to
-genomic headers alterations for what concern “seqname” fields identity and special characters (e.g. a pipe symbol replaced by the underscore).
+genomic headers alterations for what concerns “seqid” fields identity and special characters (e.g. a pipe symbol replaced by the underscore).
 
 An example is reported here down below:
 
 ```FSMMA_genomic.fna```
 
-> 000000F|arrow
+> >000000F|arrow
 > 
 > GCCGGTCCAGCGCAAAACCCTCGCTCGGCGTGATCGAGAGTATGCGCTGCGAGCCGAGGT
 > CGGGCCAGAAGAGCTTCGAATTCACGAGCCGGAAATGCGGTGCGACGATAACGCGTTCGA
