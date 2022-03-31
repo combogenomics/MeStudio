@@ -393,7 +393,7 @@ Parsing -ups file..
 
 *Circular plot*
 
-<img width="887" alt="Schermata 2022-03-31 alle 15 41 39" src="https://user-images.githubusercontent.com/97732011/161069330-b00de423-4130-4c26-89f5-e4569a4f039d.png">
+
 
 
 ## Reference
