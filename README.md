@@ -390,10 +390,15 @@ Parsing -ups file..
 
 *Distributions*
 
+![GCRDB_analyzed_cds_scatterplot](https://user-images.githubusercontent.com/97732011/161234235-57dd01c5-e8d3-40c0-aa8f-b5c3c253b9b5.png)
+![GCRDB_analyzed_ncds_scatterplot](https://user-images.githubusercontent.com/97732011/161234359-26af5ea3-babf-4546-869e-b7991c910dae.png)
+![GCRDB_analyzed_intergenic_scatterplot](https://user-images.githubusercontent.com/97732011/161234268-556c97dc-2356-449c-a34d-5a22c5873f6a.png)
+![GCRDB_analyzed_upstream_scatterplot](https://user-images.githubusercontent.com/97732011/161234407-9d0695ff-bcb7-48c1-9363-9fb47b4fa6c5.png)
 
 *Circular plot*
 
-
-
+<img width="904" alt="Schermata 2022-04-01 alle 10 51 27" src="https://user-images.githubusercontent.com/97732011/161234104-7a509acd-e2f0-44be-a1d1-dd45a6c4ce44.png">
 
 ## Reference
+
+Please, cite us from doi: https://doi.org/10.1101/2022.03.23.485463
