@@ -18,6 +18,7 @@ Optional arguments
 -rr   <str>          "gene_presence_absence.csv" file produced by Roary
 ```
 
+If you are using *MeStudio*, please cite out work https://doi.org/10.1101/2022.03.23.485463
 *MeStudio version 1.0*
 
 ## Table of Contents
@@ -31,11 +32,6 @@ Optional arguments
 - [Reference](#Reference)
 
 ## Installing MeStudio
-
-Hey sorcerer's apprentice, we know.. You got a lot to work so you may have no time to read all the sorcerer's book.
-Check the *bard-way* to run MeStudio. All's gonna work in a wand flight. 
-
-###### Bard Level
 
 You have to render `install` executable by typing:
 ```
@@ -53,7 +49,7 @@ mestudio
 ```
 And you'll get:
 ```
-Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str> -i <char> -o <char>]
+Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str>]
 
 Mandatory arguments
 -f    <str>           genomic sequence file
@@ -64,10 +60,17 @@ Mandatory arguments
 
 Optional arguments
 -rr   <str>          "gene_presence_absence.csv" file produced by Roary
--i    <char>          input character to replace
--o    <char>          output character to replace
 ```
 Please feel free to use the files contained in the [dataset](/dataset/) folder to start a trial analysis or you can directly use your own.
+Inside the [dataset](/dataset/) folder you are going to find the three files needed to start the analysis:
+
+```FSMMA_genomic.fna``` is the the genome of FSMMA strain of *Sinorhizobium meliloti*. You can get more information [here](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/382/?utm_source=None&utm_medium=referral&utm_campaign=KnownItemSensor:taxname).
+
+```FSMMA_genomic.gff``` is the product of the genomic annotation (executed via [Prokka](https://github.com/tseemann/prokka) annotator). The file is reported in GFF3 format.
+
+```FSMMA_methylation.gff``` is the GFF3 file with methylation positions obtained through the sequencer. We performed the analysis using the PacBio RT-SMRT sequencing.
+
+N.B. please note that Prokka and Roary (see *Installing MeStudio*) can be easily found to [Galaxy](https://usegalaxy.org), the installation of these tools is not strictly needed.
 
 Once this is done, you are going to find all the results inside the directory you started the analysis from. Here's reported a "tree visualization" of the directories hierarchy, assuming that you downloaded the files from the [dataset](/dataset/). 
 
@@ -86,10 +89,10 @@ Once this is done, you are going to find all the results inside the directory yo
     │   │   ├── GANTC_true_intergenic.gff
     │   │   ├── GANTC_upstream.gff
     │   │   └── results
-    │   │       ├── evo_CDS.bed
-    │   │       ├── evo_intergenic.bed
-    │   │       ├── evo_nCDS.bed
-    │   │       ├── evo_upstream.bed
+    │   │       ├── output_CDS.bed
+    │   │       ├── output_intergenic.bed
+    │   │       ├── output_nCDS.bed
+    │   │       ├── output_upstream.bed
     │   │       ├── results_cds_scatterplot.png
     │   │       ├── results_intergenic_scatterplot.png
     │   │       ├── results_ncds_scatterplot.png
@@ -117,64 +120,18 @@ Where:
 
 All the files with `.ms` extension are produced by `ms_core`.
 
-Jump to the *Results* chapter to see the images produced by *MeStudio*.
-
-
-###### Wizard Level
-From the [src](/src/) folder you can download all the scripts needed to perform the analysis as wizard level.
-Below you have a step by step process assuming that you are using the files contained into the [dataset](/dataset/) folder and a Linux-based OS.
-
-`ms_replacR`
-```
-python3.8 ms_replacR.py -out "/path/to/output_folder" -g "FSMMA_genomic.gff" -f "FSMMA_genomic.fna" -Me "FSMMA_methylation.gff" -i "|" -o "_"
-```
-`MeStudio Core`
-
-```
-mscheck -g "FSMMA_genomic.gff" -f "FSMMA_genomic.fna" -m "FSMMA_methylation.gff" -o path/to/output_dir --mo "motifs.txt" --cr "circular.txt"
-msmine path/to/output_dir/params.ms
-msfasta path/to/output_dir/params.ms
-msmatch path/to/output_dir/params.ms
-msx path/to/output_dir/params.ms
-```
-
-`ms_analyzR`
-```
-python3.8 ms_analyzR.py -out "/path/to/output_folder" -cds "FSMMA_CDS.gff" -ncds "FSMMA_nCDS.gff" -inter "FSMMA_true_intergenic.gff" -ups "FSMMA_upstream.gff" -rr "gene_presence_absence.csv" -split -evo
-```
-
-`ms_circ`
-```
-Rscript ms_circ.R
-```
-
-## Testing MeStudio Pipeline
-
-Inside the [dataset](/dataset/) folder you are going to find the three files needed to start the analysis:
-
-```FSMMA_genomic.fna``` is the the genome of FSMMA strain of *Sinorhizobium meliloti*. You can get more information [here](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/382/?utm_source=None&utm_medium=referral&utm_campaign=KnownItemSensor:taxname).
-
-```FSMMA_genomic.gff``` is the product of the genomic annotation (executed via [Prokka](https://github.com/tseemann/prokka) annotator). The file is reported in GFF3 format.
-
-```FSMMA_methylation.gff``` is the GFF3 file with methylation positions obtained through the sequencer. We performed the analysis using the PacBio RT-SMRT sequencing.
-
-N.B. please note that Prokka and Roary (see *Installing MeStudio*) can be easily found to [Galaxy](https://usegalaxy.org), the installation of these tools is not strictly needed.
+Jump to the *Results* chapter to see the results produced by *MeStudio*.
 
 
 ## MeStudio ReplacR
 In order to properly run *MeStudio Core*, a pre-processing python-based script named *ms_replacR* has been implemented and is highly suggested to be used. You can find the source code here.
-*ms_replacR* expects six arguments:
+*ms_replacR* expects four arguments:
 1. *output directory*, in which results and log files will be written
 2. *genomic annotation*, in the GFF3 format
 3. *methylation annotation*, a sequencer-produced modified base calls in the GFF3 format
 4. *genomic sequence*, in fasta or fna file format
-5. *input* string type field
-6. *output* string type field
 
-
-The last flags (.5 and .6) are used to communicate a certain character or string to replace.
-As a matter of fact MeStudio requires consistent formatting as far as the sequence identifiers are concerned but sometimes the annotation process can lead to
-genomic headers alterations for what concerns “seqid” fields identity and special characters (e.g. a pipe symbol replaced by the underscore).
+As a matter of fact MeStudio requires consistent formatting as far as the sequence identifiers are concerned but sometimes the annotation process can lead to genomic headers alterations. By default, *ms_replacR* changes pipe symbol with the underscore for what concerns “seqid” fields identity and makes sure that numbers and quality of the contigs reported on your file are good.
 
 An example is reported below:
 
@@ -207,7 +164,7 @@ After the installation, in order to check the *ms_replacR* usage, you can run:
 ```
 python3.8 ms_replacR.py --help
 
-usage: ms_replacR.py [-h] [-out OUTPUTDIR] [-g GENOMIC] [-f FASTA] [-Me METHYLATION] [-i INPUT_WORD] [-o OUTPUT_WORD]
+usage: ms_replacR.py [-h] [-out OUTPUTDIR] [-g GENOMIC] [-f FASTA] [-Me METHYLATION]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -220,13 +177,7 @@ optional arguments:
                         path to genome file [FASTA/FNA-file]
   -Me METHYLATION, --methylation METHYLATION
                         path to file produced by the sequencer [GFF-file]
-  -i INPUT_WORD, --input_word INPUT_WORD
-                        Element to delete [SYMBOL/STRING]
-  -o OUTPUT_WORD, --output_word OUTPUT_WORD
-                        Element to insert [SYMBOL/STRING]
  ```
-
-Now to process the files contained in the [dataset](/dataset/) folder, please check **Installing MeStudio** at *Wizard Level*.
 
 ## MeStudio Core
 
@@ -294,9 +245,8 @@ But again, this is an internal detail that's taken care of by MeStudio, under th
 
 
 ## MeStudio AnalyzR
-MeStudio also implements a post-processing python-based script named ms_analyzR which has to be run on the four GFF3 MeStudio-deriving files. 
-In addition, for comparative genomic analyses a “gene_presence_abscence.csv” file produced by [Roary](https://sanger-pathogens.github.io/Roary/) can be used to
-define the methylation level and patterns of core and dispensable genome fractions, as well as annotating the genes-coded proteins.
+MeStudio also implements a post-processing python-based script named *ms_analyzR* which has to be run on the four GFF3 MeStudio-deriving files. 
+In addition, for comparative genomic analyses a “gene_presence_abscence.csv” file produced by [Roary](https://sanger-pathogens.github.io/Roary/) can be used to define the methylation level and patterns of core and dispensable genome fractions, as well as annotating the genes-coded proteins.
 Here's the mandatory and optional fields required:
 
 ```
@@ -316,14 +266,13 @@ optional arguments:
                         MOTIF_true_intergenic.gff file
   -ups UPSTREAM, --upstream UPSTREAM
                         MOTIF_upstream.gff file
-  -prt, --prt_bed       Write in [OUT] tabular per-feature file ready for RCircos (OPTIONAL)
-  -split, --split_features
+  -bed, --make_bed       Write in [OUT] tabular per-feature file ready for RCircos (OPTIONAL)
+  -split, --split_by_chromosome
                         Rearrange your input GFFs for chromosomes (OPTIONAL)
 ```
-The `-split` flag saves into the output directory the GFFs at “chromosome level” rather than “feature level”. Each GFF produced will be characterized not for
-feature (CDS, nCDS, true intergenic and upstream) but by chromosomes (or contigs), maintaining the MeStudio Core derived contents and layout. 
+The `-split` flag saves into the output directory the GFFs at “chromosome level” rather than “feature level”. Each GFF produced will be characterized not for feature (CDS, nCDS, true intergenic and upstream) but by chromosomes (or contigs), maintaining the MeStudio Core derived contents and layout. 
 
-The `-prt` flag produces a BED file for each feature in which is reported: 
+The `-bed` flag produces a BED file for each feature in which is reported: 
 - the chrom column, with the name of each chromosome or contig
 - start of the feature
 - end of the feature
@@ -331,8 +280,7 @@ The `-prt` flag produces a BED file for each feature in which is reported:
 - the number of methylations found for ID
 - the protein product of the ID
  
-As well as being significant, the information contained in BED files are directly related to an R script (see [src](/src/)) which plots the distribution of the
-methylation density for each feature analysed making use of the r-package [circlize](https://jokergoo.github.io/circlize_book/book/). 
+As well as being significant, the information contained in BED files are directly related to an R script (see [src](/src/)) which plots the distribution of the methylation density for each feature analysed making use of the r-package [circlize](https://jokergoo.github.io/circlize_book/book/). 
 
 Now to process the files contained in the [dataset](/dataset/) folder, please check **Installing MeStudio** at *Wizard Level*.
 
