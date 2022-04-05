@@ -19,6 +19,7 @@ Optional arguments
 ```
 
 If you are using *MeStudio*, please cite out work https://doi.org/10.1101/2022.03.23.485463
+
 *MeStudio version 1.0*
 
 ## Table of Contents
