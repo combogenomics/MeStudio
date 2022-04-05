@@ -282,9 +282,6 @@ The `-bed` flag produces a BED file for each feature in which is reported:
  
 As well as being significant, the information contained in BED files are directly related to an R script (see [src](/src/)) which plots the distribution of the methylation density for each feature analysed making use of the r-package [circlize](https://jokergoo.github.io/circlize_book/book/). 
 
-Now to process the files contained in the [dataset](/dataset/) folder, please check **Installing MeStudio** at *Wizard Level*.
-
-
 ## Results
 
 `ms_analyzR` produces four different type of results: statistics, tabular, distributions and circular plot.
