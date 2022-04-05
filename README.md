@@ -25,7 +25,6 @@ If you are using *MeStudio*, please cite out work https://doi.org/10.1101/2022.0
 ## Table of Contents
 
 - [Installing MeStudio](#Installing-MeStudio)
-- [Testing MeStudio Pipeline](#Testing-MeStudio-Pipeline)
 - [MeStudio ReplacR](#MeStudio-ReplacR)
 - [MeStudio Core](#MeStudio-Core)
 - [MeStudio AnalyzR](#MeStudio-AnalyzR)
