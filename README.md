@@ -5,7 +5,7 @@ MeStudio connects several procedural software components that can be run either 
 When you run MeStudio as a pipeline (see *Installing MeStudio*, `./mestudio -h`) it automatically calls all the scripts and executables it needs to perform genome-wide methylation profiles analysis. Running MeStudio this way is fairly easy:
 
 ```
-Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str> -i <char> -o <char>]
+Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str>]
 
 Mandatory arguments
 -f    <str>           genomic sequence file
@@ -16,8 +16,6 @@ Mandatory arguments
 
 Optional arguments
 -rr   <str>          "gene_presence_absence.csv" file produced by Roary
--i    <char>          input character to replace
--o    <char>          output character to replace
 ```
 
 *MeStudio version 1.0*
