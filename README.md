@@ -29,6 +29,7 @@ If you are using *MeStudio*, please cite out work https://doi.org/10.1101/2022.0
 - [MeStudio Core](#MeStudio-Core)
 - [MeStudio AnalyzR](#MeStudio-AnalyzR)
 - [Results](#Results)
+- [Why MeStudio](#Why-MeStudio)
 - [Reference](#Reference)
 
 ## Installing MeStudio
@@ -341,6 +342,14 @@ Parsing -ups file..
 *Circular plot*
 
 <img width="904" alt="Schermata 2022-04-01 alle 10 51 27" src="https://user-images.githubusercontent.com/97732011/161234104-7a509acd-e2f0-44be-a1d1-dd45a6c4ce44.png">
+
+
+## Why MeStudio
+
+Third-generation sequencing technologies, namely single molecule real-time (SMRT) and Oxford Nanopore (ONT), have changed the field of genomics bringing speed increase to analysis like epigenetic markers detection. These methods are rapidly increasing the number of studies on genome-wide DNA methylation, especially in prokaryotes, where the compact size of genomes allows the generation of whole-genome methylome with relative ease. Consequently, the interest toward computational pipelines which can dig into DNA methylation features in a genome-wide manner is growing.
+Mestudio allows to understand both qualitatively and quantitatively the methylation distribution along genomic features like coding and non-coding sequences, intergenic regions and upstream elements.
+Since is widely known the regulatory role of motif sequences as target of methyltransferases, MeStudio maps them to the corresponding genomic feature, thus associating the methylated motif to a specific gene and allowing to infer cause/effect relationship.
+
 
 ## Reference
 
