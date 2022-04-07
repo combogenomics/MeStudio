@@ -346,9 +346,9 @@ Parsing -ups file..
 
 ## Why MeStudio
 
-Third-generation sequencing technologies, namely single molecule real-time (SMRT) and Oxford Nanopore (ONT), have changed the field of genomics bringing speed increase to analysis like epigenetic markers detection. These methods are rapidly increasing the number of studies on genome-wide DNA methylation, especially in prokaryotes, where the compact size of genomes allows the generation of whole-genome methylome with relative ease. Consequently, the interest toward computational pipelines which can dig into DNA methylation features in a genome-wide manner is growing.
+Third-generation sequencing technologies, namely single molecule real-time (SMRT) and Oxford Nanopore (ONT), have changed the field of genomics bringing an exceptional speedup to analyses such as epigenetic markers detection. These methods are rapidly increasing the number of studies on genome-wide DNA methylation, especially in prokaryotes, where the compact size of genomes allows the generation of whole-genome methylome with relative ease. Consequently, the interest toward computational pipelines which can dig into DNA methylation features in a genome-wide manner is growing.
 Mestudio allows to understand both qualitatively and quantitatively the methylation distribution along genomic features like coding and non-coding sequences, intergenic regions and upstream elements.
-Since is widely known the regulatory role of motif sequences as target of methyltransferases, MeStudio maps them to the corresponding genomic feature, thus associating the methylated motif to a specific gene and allowing to infer cause/effect relationship.
+Since the role of motif sequences as regulatory elements is widely accepted, MeStudio maps them to the corresponding genomic feature, thus associating the methylated motif to a specific gene and allowing to infer cause/effect relationship.
 
 
 ## Reference
