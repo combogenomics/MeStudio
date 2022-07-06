@@ -35,8 +35,11 @@ def warning_message(urlist):
     print("\n")
     for element in urlist:
         for letter in element:
-            if letter == in_char:
+            #if letter == in_char:
+            if letter == "|":
                 print("\t", f"[WARNING]: illegal character detected in {element}")
+
+
 
 def ms_replacR() -> tuple:
     ap = argparse.ArgumentParser()
@@ -45,8 +48,8 @@ def ms_replacR() -> tuple:
     ap.add_argument("-g", "--genomic", help="path to file produced by genomic annotator [GFF-file]")
     ap.add_argument("-f", "--fasta", help="path to genome file [FASTA/FNA-file]")
     ap.add_argument("-Me", "--methylation", help="path to file produced by the sequencer [GFF-file]")
-    ap.add_argument("-i", "--input_word",help="Element to delete [SYMBOL/STRING]")
-    ap.add_argument("-o", "--output_word", help="Element to insert [SYMBOL/STRING]")
+    #ap.add_argument("-i", "--input_word",help="Element to delete [SYMBOL/STRING]")
+    #ap.add_argument("-o", "--output_word", help="Element to insert [SYMBOL/STRING]")
     return ap.parse_args()
 
 args = ms_replacR()
@@ -57,8 +60,8 @@ output_dir = args.outputdir
 genomic_file = args.genomic
 fasta_file = args.fasta
 methylation_file = args.methylation
-in_char = args.input_word
-out_char = args.output_word
+#in_char = args.input_word
+#out_char = args.output_word
 
 # - - - - - - - - - - - - - - DIR - - - - - - - - - - - - - -- #
 # Create and populate the -out directory with given files      #
@@ -99,8 +102,10 @@ with open(fasta_file, 'r') as f:
         if line.startswith('>'):
             line = line.split(' ')[0]
             line = line.replace('>', '')
+            line=line.rstrip()
             fasta_headers.append(line)
 f.close()
+
 
 fasta_len = len(fasta_headers)
 print(f"These are the {fasta_len} FASTA headers:", "\n")
@@ -159,7 +164,8 @@ for element in methylation_seqids:
 warning_message(methylation_seqids)
 
 print("\n")
-print(f"Replacing in: '{in_char}' with out: '{out_char}' ")
+#print(f"Replacing in: '{in_char}' with out: '{out_char}' ")
+print(f"Replacing in: '|' with out: '_' ")
 print("Doing some abracadabras ...")
 print("\n")
 
@@ -176,7 +182,8 @@ fasta_completepath = output_dir + '/' + fasta_file
 fasta_name_path = os.path.basename(fasta_file)
 with open(fasta_file, 'r+') as f:
     for line in f:
-        line = line.replace(in_char, out_char)
+        line = line.replace("|", "_")
+        #line = line.replace(in_char, out_char)
         fasta_temp_file.write(line)
 fasta_temp_file.close()
 
@@ -188,7 +195,8 @@ with open (genomic_file, 'r+') as g:
     for line in g:
         if not line.startswith('#') and not line.startswith('##FASTA') and not line.startswith('>') and not \
                 line.startswith('A') and not line.startswith('T') and not line.startswith('C') and not line.startswith('G'):
-            line = line.replace(in_char, out_char, 1)
+            line = line.replace("|", "_", 1)
+            #line = line.replace(in_char, out_char, 1)
             genomic_temp_file.write(line)
 genomic_temp_file.close()
 
@@ -200,7 +208,8 @@ with open(methylation_file, 'r+') as me:
     for line in me:
         if not line.startswith('#') and not line.startswith('##FASTA') and not line.startswith('>') and not \
                 line.startswith('A') and not line.startswith('T') and not line.startswith('C') and not line.startswith('G'):
-            line = line.replace(in_char, out_char, 1)
+            #line = line.replace(in_char, out_char, 1)
+            line = line.replace("|", "_", 1)
             methylation_temp_file.write(line)
 methylation_temp_file.close()
 
@@ -220,6 +229,7 @@ with open(tempfile_fasta, 'r') as f:
         if line.startswith('>'):
             line = line.split(' ')[0]
             line = line.replace('>', '')
+            line = line.rstrip()
             fasta_headers_tmp.append(line)
 f.close()
 
@@ -264,7 +274,16 @@ if os.path.getsize(tempfile_methylation) == 0:
 # if fasta_headers_tmp[0] != genomic_seqids_tmp[0] or fasta_headers_tmp[0] != methylation_seqids_tmp[0]:
 #     sys.exit("[ERROR]: seqids are not coincidents. FILES not valid. Please remove your folder.")
 
+# print(fasta_headers_tmp)
+# print(genomic_seqids_tmp)
+# print(methylation_seqids_tmp)
 
+id_check = fasta_headers_tmp == genomic_seqids_tmp == methylation_seqids_tmp
+
+if id_check == False:
+    sys.exit("[ERROR]: your input file headers are different.")
+else:
+    print("Your are ready in 3,2,1 ..")
 # - - - - - - - - - - - - MODs - - - - - - - - - - - - #
 # Use a certain file as footprint in order to set the  #
 # GFF's core sequence and avoid tidy-array-disorders   #
@@ -296,6 +315,12 @@ old_methylation_path = output_dir + '/' + methylation_file
 os.rename(tempfile_fasta, fasta_file)
 os.rename(tempfile_genomic, genomic_file)
 os.rename(tempfile_methylation, methylation_file)
+
+# print(methylation_seqids_tmp, genomic_seqids_tmp, fasta_headers_tmp)
+
+
+
+
 
 # - - - - - - - - - - - - README - - - - - - - - - - - #
 # Write a README.txt file with all the informations to #
