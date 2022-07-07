@@ -106,7 +106,7 @@ fi
 
 set -- "${POSITIONAL_ARGS[@]}"
 
-python3 "$replacer" -out "$OUTPUT_DIR" -g "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -Me "$METHYLATION_GFF" -i "$INPUT_CHAR" -o "$OUTPUT_CHAR"
+python3 "$replacer" -out "$OUTPUT_DIR" -g "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -Me "$METHYLATION_GFF"
 
 base_genomic_gff=$(basename "$GENOMIC_GFF")
 base_methylation_gff=$(basename "$METHYLATION_GFF")
