@@ -82,9 +82,9 @@ else:
 # os.system('cp ' + input_dir + fasta_file + ' ' + output_dir)
 # os.system('cp ' + input_dir + methylation_file + ' ' + output_dir)
 
-os.system('cp ' + genomic_file + ' ' + output_dir)
-os.system('cp ' + fasta_file + ' ' + output_dir)
-os.system('cp ' + methylation_file + ' ' + output_dir)
+# os.system('cp ' + genomic_file + ' ' + output_dir)
+# os.system('cp ' + fasta_file + ' ' + output_dir)
+# os.system('cp ' + methylation_file + ' ' + output_dir)
 
 # - - - - - - - - - - - - - - LOG - - - - - - - - - - - - - - #
 # Printing all replicon-info contained inside the input files #
@@ -315,6 +315,10 @@ old_methylation_path = output_dir + '/' + methylation_file
 os.rename(tempfile_fasta, fasta_file)
 os.rename(tempfile_genomic, genomic_file)
 os.rename(tempfile_methylation, methylation_file)
+
+os.system('cp ' + genomic_file + ' ' + output_dir)
+os.system('cp ' + fasta_file + ' ' + output_dir)
+os.system('cp ' + methylation_file + ' ' + output_dir)
 
 # print(methylation_seqids_tmp, genomic_seqids_tmp, fasta_headers_tmp)
 
