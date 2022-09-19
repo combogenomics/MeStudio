@@ -24,6 +24,7 @@ If you are using *MeStudio*, please cite our work https://doi.org/10.1101/2022.0
 
 ## Table of Contents
 
+- [Dependencies](#Dependencies)
 - [Installing MeStudio](#Installing-MeStudio)
 - [MeStudio ReplacR](#MeStudio-ReplacR)
 - [MeStudio Core](#MeStudio-Core)
@@ -31,6 +32,54 @@ If you are using *MeStudio*, please cite our work https://doi.org/10.1101/2022.0
 - [Results](#Results)
 - [Why MeStudio](#Why-MeStudio)
 - [Reference](#Reference)
+
+## Dependencies
+
+To properly run the scripts of MeStudio, you need some dependencies to be installed. Here down below is reported how to install each dependency, you have just to copy-paste into the shell!
+
+###### pandas
+
+```
+pip install pandas
+```
+If you have ```conda``` installed:
+
+```
+conda install pandas
+```
+
+###### numpy
+
+```
+pip install numpy
+```
+If you have ```conda``` installed:
+
+```
+conda install numpy
+```
+
+###### matplotlib
+
+```
+pip install matplotlib
+```
+If you have ```conda``` installed:
+
+```
+conda install matplotlib
+```
+
+###### R package: circlize
+
+```
+install.packages("circlize")
+```
+Or from GitHub:
+
+```
+devtools::install_github("jokergoo/circlize")
+```
 
 ## Installing MeStudio
 
