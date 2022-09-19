@@ -33,8 +33,9 @@ def ms_analyzR() -> tuple:
     ap.add_argument("-ncds", "--noncoding", help="MOTIF_nCDS.gff file")
     ap.add_argument("-inter", "--intergenic", help="MOTIF_true_intergenic.gff file")
     ap.add_argument("-ups", "--upstream", help="MOTIF_upstream.gff file")
-    ap.add_argument("-prt", "--prt_bed", help="Write in [OUT] tabular per-feature file ready for RCircos", action="store_true", default=False)
-    ap.add_argument("-split", "--split_features", help="Rearrange your input GFFs for chromosomes", action="store_true", default=False)
+    ap.add_argument("-bed", "--make_bed", help="Write in [OUT] tabular per-feature file ready for RCircos", action="store_true", default=False)
+    ap.add_argument("-chr", "--make_chrom", help="Rearrange your input GFFs for chromosomes", action="store_true", default=False)
+    # ap.add_argument("-e", "--show_error", help="if indexer is out-of-bonds error occurs, by returning TRUE this flag you can see which gene-id is wrong and manually erase it from your GFF", action="store_true", default=False)
     return ap.parse_args()
 
 args = ms_analyzR()
@@ -47,8 +48,9 @@ coding_ms = args.coding
 noncoding_ms = args.noncoding
 intergenic_ms = args.intergenic
 upstream_ms = args.upstream
-evo_gff = args.prt_bed
-split_flag = args.split_features
+evo_gff = args.make_bed
+split_flag = args.make_chrom
+# show_error = args.show_error
 
 # coding_compath = input_dir + coding_ms
 # noncoding_compath = input_dir + noncoding_ms
@@ -185,6 +187,7 @@ with open(upstream_ms, 'r') as upstream_file:
     ups_seqID_HMN = upstream_count_serie.iloc[[0]]
     # Name of seqID with Highest Methylation Number (HMN)
     ups_seqID_HMN = ups_seqID_HMN.keys()[0]
+    # print(ups_seqID_HMN)
     
     tot_meth_upstream = upstream_count.sum(axis=0)
     tot_meth_upstream_df = tot_meth_upstream.to_frame().T
@@ -242,10 +245,12 @@ if not roary_csv:
         for item in sublist:
             cds_valueslist.append(item)
 
-    cds_plot_df = pd.DataFrame(
-        list(zip(cds_indexlist, cds_valueslist)), columns=['geneID', 'val'])
-    cds_plot_df.plot(x='val', y='geneID', kind='scatter')
-    plt.savefig(output_dir + '/' + basename + '_cds_scatterplot.png')
+    cds_plot_df = pd.DataFrame(list(zip(cds_indexlist, cds_valueslist)), columns=[
+                            'gene ID', 'N. of genes'])
+    cds_plot_df = cds_plot_df.head(15)
+    cds_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+    # plt.yticks("")
+    plt.savefig(output_dir + '/' + basename + '_CDS_scatterplot.png')
 
     # nCDS categorical-plot
     ncds_index = ncds_count.index
@@ -259,10 +264,11 @@ if not roary_csv:
         for item in sublist:
             ncds_valueslist.append(item)
 
-    ncds_plot_df = pd.DataFrame(
-        list(zip(ncds_indexlist, ncds_valueslist)), columns=['geneID', 'val'])
-    ncds_plot_df.plot(x='val', y='geneID', kind='scatter')
-    plt.savefig(output_dir + '/' + basename + '_ncds_scatterplot.png')
+    ncds_plot_df = pd.DataFrame(list(zip(ncds_indexlist, ncds_valueslist)), columns=[
+        'gene ID', 'N. of genes'])
+    ncds_plot_df = ncds_plot_df.head(15)
+    ncds_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+    plt.savefig(output_dir + '/' + basename + '_nCDS_scatterplot.png')
 
     # Intergenic categorical-plot
     intergenic_index = intergenic_count.index
@@ -276,10 +282,11 @@ if not roary_csv:
         for item in sublist:
             intergenic_valueslist.append(item)
 
-    intergenic_plot_df = pd.DataFrame(list(
-        zip(intergenic_indexlist, intergenic_valueslist)), columns=['geneID', 'val'])
-    intergenic_plot_df.plot(x='val', y='geneID', kind='scatter')
-    plt.savefig(output_dir + '/' + basename + '_intergenic_scatterplot.png')
+    intergenic_plot_df = pd.DataFrame(list(zip(intergenic_indexlist, intergenic_valueslist)), columns=[
+        'gene ID', 'N. of genes'])
+    intergenic_plot_df = intergenic_plot_df.head(15)
+    intergenic_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+    plt.savefig(output_dir + '/' + basename + '_tIG_scatterplot.png')
 
     # Upstream categorical-plot
     ups_index = upstream_count.index
@@ -293,10 +300,11 @@ if not roary_csv:
         for item in sublist:
             ups_valueslist.append(item)
 
-    ups_plot_df = pd.DataFrame(
-        list(zip(ups_indexlist, ups_valueslist)), columns=['geneID', 'val'])
-    ups_plot_df.plot(x='val', y='geneID', kind='scatter')
-    plt.savefig(output_dir + '/' + basename + '_upstream_scatterplot.png')
+    ups_plot_df = pd.DataFrame(list(zip(ups_indexlist, ups_valueslist)), columns=[
+        'gene ID', 'N. of genes'])
+    ups_plot_df = ups_plot_df.head(15)
+    ups_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+    plt.savefig(output_dir + '/' + basename + '_UPS_scatterplot.png')
 
     print("\n")
     print("Analysis completed")
@@ -307,6 +315,7 @@ if not roary_csv:
 with open(roary_csv, 'r') as roary_file:
     roary_df = pd.read_csv(roary_file, error_bad_lines=False, index_col=False, dtype='unicode')
     tot_genes = roary_df.shape[0]
+    # print(cds_seqID_HMN)
 
     # Hide the 'elementwise comparison failed' [WARNING]
     warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -337,6 +346,7 @@ with open(roary_csv, 'r') as roary_file:
     else:
         ncds_core_value = 'Dispensable'
 
+    # print(intergenic_seqID_HMN)
     inter_BLASTX = roary_df.loc[(roary_df == intergenic_seqID_HMN).any(1), 'Annotation']
     inter_BLASTX = inter_BLASTX.to_frame(name='Gene')
     inter_BLASTX = inter_BLASTX['Gene'].iloc[0]
@@ -351,6 +361,8 @@ with open(roary_csv, 'r') as roary_file:
         inter_core_value = 'Dispensable'
 
     ups_BLASTX = roary_df.loc[(roary_df == ups_seqID_HMN).any(1), 'Annotation']
+    ups_emptylist=[]
+
     ups_BLASTX = ups_BLASTX.to_frame(name='Gene')
     ups_BLASTX = ups_BLASTX['Gene'].iloc[0]
 
@@ -426,9 +438,10 @@ for sublist in cds_valuelist:
     for item in sublist:
         cds_valueslist.append(item)
 
-cds_plot_df = pd.DataFrame(list(zip(cds_indexlist, cds_valueslist)), columns=['geneID', 'val'])
-cds_plot_df.plot(x='val', y='geneID',kind='scatter')
-plt.yticks("")
+cds_plot_df = pd.DataFrame(list(zip(cds_indexlist, cds_valueslist)), columns=['gene ID', 'N. of genes'])
+cds_plot_df=cds_plot_df.head(15)
+cds_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+# plt.yticks("")
 plt.savefig(output_dir + '/' + basename + '_cds_scatterplot.png')
 
 # nCDS categorical-plot
@@ -444,9 +457,10 @@ for sublist in ncds_valuelist:
     for item in sublist:
         ncds_valueslist.append(item)
 
-ncds_plot_df = pd.DataFrame(list(zip(ncds_indexlist, ncds_valueslist)), columns=['geneID', 'val'])
-ncds_plot_df.plot(x='val', y='geneID', kind='scatter')
-plt.yticks("")
+ncds_plot_df = pd.DataFrame(list(zip(ncds_indexlist, ncds_valueslist)), columns=['gene ID', 'N. of genes'])
+ncds_plot_df = ncds_plot_df.head(15)
+ncds_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+# plt.yticks("")
 plt.savefig(output_dir + '/' + basename + '_ncds_scatterplot.png')
 
 # Intergenic categorical-plot
@@ -462,9 +476,10 @@ for sublist in intergenic_valuelist:
     for item in sublist:
         intergenic_valueslist.append(item)
 
-intergenic_plot_df = pd.DataFrame(list(zip(intergenic_indexlist, intergenic_valueslist)), columns=['geneID', 'val'])
-intergenic_plot_df.plot(x='val', y='geneID', kind='scatter')
-plt.yticks("")
+intergenic_plot_df = pd.DataFrame(list(zip(intergenic_indexlist, intergenic_valueslist)), columns=['gene ID', 'N. of genes'])
+intergenic_plot_df = intergenic_plot_df.head(15)
+intergenic_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+# plt.yticks("")
 plt.savefig(output_dir + '/' + basename + '_intergenic_scatterplot.png')
 
 # Upstream categorical-plot
@@ -480,9 +495,10 @@ for sublist in ups_valuelist:
     for item in sublist:
         ups_valueslist.append(item)
 
-ups_plot_df = pd.DataFrame(list(zip(ups_indexlist, ups_valueslist)), columns=['geneID', 'val'])
-ups_plot_df.plot(x='val', y='geneID', kind='scatter')
-plt.yticks("")
+ups_plot_df = pd.DataFrame(list(zip(ups_indexlist, ups_valueslist)), columns=['gene ID', 'N. of genes'])
+ups_plot_df = ups_plot_df.head(15)
+ups_plot_df.plot(x='N. of genes', y='gene ID', kind='scatter')
+# plt.yticks("")
 plt.savefig(output_dir + '/' + basename + '_upstream_scatterplot.png')
 
 
@@ -687,10 +703,16 @@ if split_flag == True:
                 commandBash_1 = f"grep '{line}' {coding_ms} > {contig_out}"
                 os.system(commandBash_1)
 
+# if show_error == True:
+
+#     print(f"This is the error in CDS: {cds_seqID_HMN}")
+#     print(f"This is the error in nCDS: {ncds_seqID_HMN}")
+#     print(f"This is the error in UP: {intergenic_seqID_HMN}")
+#     print(f"This is the error in tIG: {cds_seqID_HMN}")
+
     
-    print("\n")
-    print("Doing some ABRACADABRA")
-    print("Done!")
+print("\n")
+print("Done!")
 
 
 
