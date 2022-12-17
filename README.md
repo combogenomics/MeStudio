@@ -1,4 +1,7 @@
 # MeStudio
+
+![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white) ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+
 MeStudio is a tool which allows us to analyse and combine genome-wide methylation profiles with genomic features.
 MeStudio connects several procedural software components that can be run either individually or as part of a pipeline.
 
