@@ -405,4 +405,4 @@ Since the role of motif sequences as regulatory elements is widely accepted, MeS
 
 ## Reference
 
-Please, cite us from doi: https://doi.org/10.1101/2022.03.23.485463
+Please, cite us from doi: https://doi.org/10.3390/ijms24010159
