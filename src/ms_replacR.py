@@ -1,13 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*
 
+## - Libaries Import - ##
+from curses.ascii import isspace
 import os
+from re import L
 import sys
 import random
-import shutil
 import argparse
 from pathlib import Path
+import pandas as pd
+import gffpandas.gffpandas as gffpd
 
+## - Functions Definition - ##
+
+def idQV(gff3):
+    ## Init the GFF3 file
+    path_gff = os.path.abspath(gff3)
+    with open(path_gff, 'r') as pgff:
+        df_gff = pd.read_table(pgff, header=None, sep= "\t")
+        # for value in df_gff["iQV"]:
+        #     if value == 'nan':
+        #         print(value)
+
+## Take 2 GFF3 files and check if the SeqID is in the same order for both
 def gff_organizR(file_path, file_a, file_b):
     p = Path(file_path)
 
@@ -25,317 +41,241 @@ def gff_organizR(file_path, file_a, file_b):
 
     print("\n","[OK] your files are now with the same order, proceed.")
 
-def temp_generator():
+## Create a tmp string with random numbers
+def temporary():
     while True:
         my_string = 'tmp' + str(random.randint(1,1000000000))
         if not os.path.exists(my_string):
             return my_string
 
-def warning_message(urlist):
+## Based on the tmp numeric string of temporary(), create tmp files (FASTA / GFF3)
+def tempfile_generator(infile):
+    random_id = temporary()
+    path_infile = os.path.abspath(infile)
+
+    if path_infile.endswith('.fasta') or path_infile.endswith('.fna'):
+        fasta_temporary = open(path_out + '/' + 'genomic_' + random_id + '.fasta', 'w')
+        with open(path_fasta, 'r+') as f:
+            for line in f:
+                line = line.replace('|', '_')
+                fasta_temporary.write(line)
+        fasta_temporary.close()
+
+    if path_infile.endswith('_anno.gff') or path_infile.endswith('_annotation.gff'):
+        anno_temporary = open(path_out + '/' + 'anno_'+random_id + '.gff', 'w')
+        with open (path_anno, 'r+') as a:
+            for line in a:
+                if '\t' in line and not '#' in line:
+                    line = line.replace("|", "_")
+                    anno_temporary.write(line)
+        anno_temporary.close()
+    
+    if path_infile.endswith('_smart.gff'):
+        smart_temporary = open(path_out + '/' + 'smart_'+random_id + '.gff', 'w')
+        with open (path_smart, 'r+') as s:
+            for line in s:
+                if line.startswith('#'):
+                    pass
+                elif line.startswith('>'):
+                    pass
+                else:
+                    line = line.replace("|", "_")
+                    smart_temporary.write(line)
+        smart_temporary.close()
+
+## Print to stdout a warning message if pipe symbol is found in a list of SeqIDs 
+def warning_message(ilist):
     print("\n")
-    for element in urlist:
+    for element in ilist:
         for letter in element:
-            #if letter == in_char:
             if letter == "|":
-                print("\t", f"[WARNING]: illegal character detected in {element}")
+                print("\t", f"[WARNING]: illegal character detected in {element}. Pipe symbol will be modified.")
 
+## Print to stdout name and number of SeqIDs found in the input files (FASTA / GFF3)
+def gff_logger(infile):
+    path_infile = os.path.abspath(infile)
 
+    if path_infile.endswith('smart.gff'):
+        with open(path_infile, 'r') as g:
+            genomic_seqids = []
+            first = ""
+            current = ""
+            for line in g:
+                if not line.startswith('#') and '\t' in line:
+                    current = line.split('\t')[0]
+                    if current != first:
+                        genomic_seqids.append(current)
+                        first = current
+                    else:
+                        first = current
+        contigs_occurrence = len(genomic_seqids)
+        print("Parsing the METHYLATION [-Me] file")
+        print(f"There are {contigs_occurrence} found headers:")
+        for element in genomic_seqids:
+            print("\t", element)
+        warning_message(genomic_seqids)
 
+    if path_infile.endswith('anno.gff'):
+        with open(path_infile, 'r') as g:
+            genomic_seqids = []
+            first = ""
+            current = ""
+            for line in g:
+                if not line.startswith('#') and '\t' in line:
+                    current = line.split('\t')[0]
+                    if current != first:
+                        genomic_seqids.append(current)
+                        first = current
+                    else:
+                        first = current
+        contigs_occurrence = len(genomic_seqids)
+        print("Parsing the ANNOTATION [-anno] file")
+        print(f"There are {contigs_occurrence} found headers:")
+        for element in genomic_seqids:
+            print("\t", element)
+        warning_message(genomic_seqids)
+    
+    if path_infile.endswith('.fasta') or path_infile.endswith('.fna'):
+        with open(path_fasta, 'r') as f: 
+            data_fasta = f.readlines()
+            fasta_headers = []
+            for line in data_fasta:
+                if line.startswith('>'):
+                    line = line.split(' ')[0]
+                    line = line.replace('>', '')
+                    line=line.rstrip()
+                    fasta_headers.append(line)
+
+        contigs_number = len(fasta_headers)
+        print("Parsing the FASTA [-f] file")
+        print(f"There are {contigs_number} found headers:")
+        for element in fasta_headers:
+            print("\t", element)
+        warning_message(fasta_headers)
+
+## - Main Function Definition - ##
 def ms_replacR() -> tuple:
     ap = argparse.ArgumentParser()
-    #ap.add_argument("-in", "--inputdir",help="path to your files directory")
     ap.add_argument("-out", "--outputdir", help="path to new files directory")
-    ap.add_argument("-g", "--genomic", help="path to file produced by genomic annotator [GFF-file]")
+    ap.add_argument("-anno", "--annotation", help="path to file produced by genomic annotator [GFF-file]")
     ap.add_argument("-f", "--fasta", help="path to genome file [FASTA/FNA-file]")
-    ap.add_argument("-Me", "--methylation", help="path to file produced by the sequencer [GFF-file]")
-    #ap.add_argument("-i", "--input_word",help="Element to delete [SYMBOL/STRING]")
-    #ap.add_argument("-o", "--output_word", help="Element to insert [SYMBOL/STRING]")
+    ap.add_argument("-smart", "--smartlink", help="path to file produced by the sequencer [GFF-file]")
+    ap.add_argument("-iqv", "--identificationQV", help="If used, this flag clears the methylations with no identificationQV",action="store_true", default=False)
     return ap.parse_args()
 
 args = ms_replacR()
 
-# Defining file-objects:
-# input_dir = args.inputdir
+# Defining file-paths:
 output_dir = args.outputdir
-genomic_file = args.genomic
+genomic_file = args.annotation
 fasta_file = args.fasta
-methylation_file = args.methylation
-#in_char = args.input_word
-#out_char = args.output_word
+methylation_file = args.smartlink
+identification_qvalue = args.identificationQV
+## - - - - - - - - - - - - - - - - - - - - - ##
+path_out = os.path.abspath(output_dir)
+path_anno = os.path.abspath(genomic_file)
+path_fasta = os.path.abspath(fasta_file)
+path_smart = os.path.abspath(methylation_file)
+## - - - - - - - - - - - - - - - - - - - - - ##
+name_out = os.path.basename(path_out)
+name_anno = os.path.basename(path_anno)
+name_fasta = os.path.basename(path_fasta)
+name_smart = os.path.basename(path_smart)
+# name_out = os.path.basename(path_out.split('.')[0])
+# name_anno = os.path.basename(path_anno.split('.')[0])
+# name_fasta = os.path.basename(path_fasta.split('.')[0])
+# name_smart = os.path.basename(path_smart.split('.')[0])
 
-# - - - - - - - - - - - - - - DIR - - - - - - - - - - - - - -- #
-# Create and populate the -out directory with given files      #
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- #
+## - Files extensions check - ##
+
+# Checking annotation file
+# if not genomic_file.endswith('_anno.gff') or not genomic_file.endswith('_annotation.gff'):
+#    sys.exit("[WARNING] The annotation file is not correctly named. Please change it by adding '_anno.gff' or '_annotation.gff' as extension, or make sure you added the correct file.")
+# else:
+#     print("[OK] The annotation file (-anno, --annotation) is correctly named.")
+# # Checking fasta file
+# if not fasta_file.endswith('fasta') or not fasta_file.endswith('fna'):
+#    sys.exit("[WARNING] The genomic file is not correctly named. Please change it by adding '.fasta' or '.fna' as extension, or make sure you added the correct file.")
+# else:
+#     print("[OK] The genomic file (-f, --fasta) is correctly named.")
+# # Checking smartlink file
+# if not methylation_file.endswith('_smart.gff'):
+#    sys.exit("[WARNING] The SmartLink file is not correctly named. Please change it by adding '_smart.gff' as extension, or make sure you added the correct file.")
+# else:
+#     print("[OK] The SmartLink file (-smart, --smartlink) is correctly named.")
 
 # Create -out's folder and log some info
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
-    basename = os.path.basename(output_dir)
+if not os.path.exists(path_out):
+    os.makedirs(path_out)
+    basename = os.path.basename(path_out)
     print("\n")
-    print(f"Creating the {basename} folder ..")
+    print(f"Creating {basename} folder")
 else:
-    sys.exit("[WARNING]: The chosen directory already exists, please change folder's name")
+    sys.exit("[WARNING] The chosen directory already exists, please change folder's name")
 
-# Copy files from -input_dir to -output_dir
+## - STDOUT printing information - ##
 
-# os.system('cp ' + input_dir + genomic_file + ' ' + output_dir)
-# os.system('cp ' + input_dir + fasta_file + ' ' + output_dir)
-# os.system('cp ' + input_dir + methylation_file + ' ' + output_dir)
-
-# os.system('cp ' + genomic_file + ' ' + output_dir)
-# os.system('cp ' + fasta_file + ' ' + output_dir)
-# os.system('cp ' + methylation_file + ' ' + output_dir)
-
-# - - - - - - - - - - - - - - LOG - - - - - - - - - - - - - - #
-# Printing all replicon-info contained inside the input files #
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - # 
-
-# INFO: FASTA file
+# INFO: FASTA file:
 print("\n")
-print ("Parsing FASTA [-f] file ...", "\n")
-
-# Parsing FASTA file:
-with open(fasta_file, 'r') as f: 
-    data_fasta = f.readlines()
-    fasta_headers = []
-    for line in data_fasta:
-        if line.startswith('>'):
-            line = line.split(' ')[0]
-            line = line.replace('>', '')
-            line=line.rstrip()
-            fasta_headers.append(line)
-f.close()
-
-
-fasta_len = len(fasta_headers)
-print(f"These are the {fasta_len} FASTA headers:", "\n")
-for element in fasta_headers:
-    print("\t", element)
-warning_message(fasta_headers)
-
-#INFO: GENOMIC file
+gff_logger(path_fasta)
+#INFO: ANNOTATION file
 print("\n")
-print("Parsing GENOMIC [-g] file ...", "\n")
-
-# Parsing GENOMIC file:
-with open(genomic_file, 'r') as g:
-    genomic_seqids = []
-    first = ""
-    current = ""
-    for line in g:
-        if not line.startswith('#') and '\t' in line:
-            current = line.split('\t')[0]
-            if current != first:
-                genomic_seqids.append(current)
-                first = current
-            else:
-                first = current
-g.close()
-
-gen_len = len(genomic_seqids)
-print(f"These are the {gen_len} GENOMIC headers:", "\n")
-for element in genomic_seqids:
-    print("\t", element)
-warning_message(genomic_seqids)
-
+gff_logger(path_anno)
 # INFO: METHYLATION file
 print("\n")
-print("Parsing METHYLATION [-Me] file ...", "\n")
+gff_logger(path_smart)
 
-# # Parsing METHYLATION file:
-with open(methylation_file, 'r') as m:
-    methylation_seqids = []
-    first = ""
-    current = ""
-    for line in m:
-        if not line.startswith('#') and '\t' in line:
-            current = line.split('\t')[0]
-            if current != first:
-                methylation_seqids.append(current)
-                first = current
-            else:
-                first = current
-m.close()
+## - Temporary files creation - ##
+print("Writing and saving temporary files")
+tempfile_generator(path_fasta)
+tempfile_generator(path_anno)
+tempfile_generator(path_smart)
 
-meth_len = len(methylation_seqids)
-print(f"These are the {meth_len} METHYLATION headers:", "\n")
-for element in methylation_seqids:
-    print("\t", element)
-warning_message(methylation_seqids)
+## Initialize temporary objects
+temporary_genomic = ''
+temporary_annotation = ''
+temporary_methylation = ''
 
-print("\n")
-#print(f"Replacing in: '{in_char}' with out: '{out_char}' ")
-print(f"Replacing in: '|' with out: '_' ")
-print("Doing some abracadabras ...")
-print("\n")
-
-# - - - - - - - - - - - - - TMP - - - - - - - - - - - - - - - #
-# Create and modify TMP files that you will use as MAIN later #
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-
-# Initializing randomic numerical index
-randomID = temp_generator()
-
-# Create fasta_tmp_<n_index>
-fasta_temp_file = open(output_dir + '/' + 'fasta_'+randomID + '.fasta', 'w')
-fasta_completepath = output_dir + '/' + fasta_file
-fasta_name_path = os.path.basename(fasta_file)
-with open(fasta_file, 'r+') as f:
-    for line in f:
-        line = line.replace("|", "_")
-        #line = line.replace(in_char, out_char)
-        fasta_temp_file.write(line)
-fasta_temp_file.close()
-
-
-# Create genomic_tmp_<n_index>
-genomic_temp_file = open(output_dir + '/' + 'genomic_'+randomID + '.gff', 'w')
-genomic_completepath = output_dir + '/' + genomic_file
-with open (genomic_file, 'r+') as g:
-    for line in g:
-        if not line.startswith('#') and not line.startswith('##FASTA') and not line.startswith('>') and not \
-                line.startswith('A') and not line.startswith('T') and not line.startswith('C') and not line.startswith('G'):
-            line = line.replace("|", "_", 1)
-            #line = line.replace(in_char, out_char, 1)
-            genomic_temp_file.write(line)
-genomic_temp_file.close()
-
-
-# Create methylation_tmp_<n_index>
-methylation_temp_file = open(output_dir + '/' + 'metylation_'+randomID + '.gff', 'w')
-methylation_completepath = output_dir + '/' + methylation_file
-with open(methylation_file, 'r+') as me:
-    for line in me:
-        if not line.startswith('#') and not line.startswith('##FASTA') and not line.startswith('>') and not \
-                line.startswith('A') and not line.startswith('T') and not line.startswith('C') and not line.startswith('G'):
-            #line = line.replace(in_char, out_char, 1)
-            line = line.replace("|", "_", 1)
-            methylation_temp_file.write(line)
-methylation_temp_file.close()
-
-
-# - - - - - - - - - - - - tmp INIT - - - - - - - - - - - - - - - #
-# Initialize the tmp_files in order to read and check them later #
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- #
-
-tempfile_genomic = output_dir + '/' + 'genomic_'+randomID + '.gff'
-tempfile_methylation = output_dir + '/' + 'metylation_'+randomID + '.gff'
-tempfile_fasta = output_dir + '/' + 'fasta_' + randomID + '.fasta'
-
-with open(tempfile_fasta, 'r') as f:
-    data_fasta_tmp = f.readlines()
-    fasta_headers_tmp = []
-    for line in data_fasta_tmp:
-        if line.startswith('>'):
-            line = line.split(' ')[0]
-            line = line.replace('>', '')
-            line = line.rstrip()
-            fasta_headers_tmp.append(line)
-f.close()
-
-with open(tempfile_genomic, 'r') as g:
-    genomic_seqids_tmp = []
-    first = ""
-    current = ""
-    for line in g:
-        if not line.startswith('#') and '\t' in line:
-            current = line.split('\t')[0]
-            if current != first:
-                genomic_seqids_tmp.append(current)
-                first = current
-            else:
-                first = current
-g.close()
-
-with open(tempfile_methylation, 'r') as me:
-    methylation_seqids_tmp = []
-    first = ""
-    current = ""
-    for line in me:
-        if not line.startswith('#'):
-            current = line.split('\t')[0]
-            if current != first:
-                methylation_seqids_tmp.append(current)
-                first = current
-            else:
-                first = current
-me.close()
-
-# - - - - - - - - - - - SECURITY - - - - - - - - - - - #
-# Checking if your output files are valid..            #
-# - - - - - - - - - - - - - - - - - - - - - - - - - -- #
-
-if os.path.getsize(tempfile_fasta) == 0:
-    sys.exit("[ERROR]: something went wront, your FASTA is not valid. Please remove your folder.")
-if os.path.getsize(tempfile_genomic) == 0:
-    sys.exit("[ERROR]: something went wront, your GENOMIC is not valid. Please remove your folder.")
-if os.path.getsize(tempfile_methylation) == 0:
-    sys.exit("[ERROR]: something went wront, your METHYLATION is not valid. Please remove your folder.")
-# if fasta_headers_tmp[0] != genomic_seqids_tmp[0] or fasta_headers_tmp[0] != methylation_seqids_tmp[0]:
-#     sys.exit("[ERROR]: seqids are not coincidents. FILES not valid. Please remove your folder.")
-
-# print(fasta_headers_tmp)
-# print(genomic_seqids_tmp)
-# print(methylation_seqids_tmp)
-
-id_check = fasta_headers_tmp == genomic_seqids_tmp == methylation_seqids_tmp
-
-if id_check == False:
-    sys.exit("[ERROR]: your input file headers are different.")
-else:
-    print("Your are ready in 3,2,1 ..")
-# - - - - - - - - - - - - MODs - - - - - - - - - - - - #
-# Use a certain file as footprint in order to set the  #
-# GFF's core sequence and avoid tidy-array-disorders   #
-# - - - - - - - - - - - - - - - - - - - - - - - - - -- #
-
-p = Path(output_dir)
-met_f = open(tempfile_methylation)
-
-for line in met_f:
+for element in os.listdir(path_out):
+    if element.startswith("genomic"):
+        temporary_genomic = element
+    if element.startswith("anno"):
+        temporary_annotation = element
+    if element.startswith("smart"):
+        temporary_methylation = element
+## Assign a complete path to each temporary file
+temporary_genomic = path_out + '/' + temporary_genomic
+temporary_annotation = path_out + '/' + temporary_annotation
+temporary_methylation = path_out + '/' + temporary_methylation
+print("[OK]")
+## - Temporary files ordering - ##
+print("Indexing and ordering your temporary files")
+tm = open(temporary_methylation)
+for line in tm:
     if not line.startswith('#') or line.startswith('##FASTA'):
-        next(met_f)
-        idx = {line.split()[0]: i for i, line in enumerate(met_f)}
+        next(tm)
+        idx = {line.split()[0]: i for i, line in enumerate(tm)}
 
-with open(tempfile_genomic, 'r+') as tg_f:
-    dat = tg_f.readlines()
-    tg_f.seek(0)
-    for line in sorted(dat[0:],key=lambda l: idx.get(l.split()[0], 0)):
-        tg_f.write(line)
-met_f.close()
+    with open(temporary_annotation, 'r+') as ta:
+        dat = ta.readlines()
+        ta.seek(0)
+        for line in sorted(dat[0:],key=lambda l: idx.get(l.split()[0], 0)):
+            ta.write(line)
+tm.close() 
+print("[OK]")
 
-print("\n","[OK] your files are now with the same order, proceed.")
+# if identification_qvalue == True:
+#     idQV(temporary_methylation)
 
-
-# Rename all the files
-old_fasta_path = output_dir + '/' + fasta_file
-old_genomic_path = output_dir + '/' + genomic_file
-old_methylation_path = output_dir + '/' + methylation_file
-
-os.rename(tempfile_fasta, fasta_file)
-os.rename(tempfile_genomic, genomic_file)
-os.rename(tempfile_methylation, methylation_file)
-
-os.system('cp ' + genomic_file + ' ' + output_dir)
-os.system('cp ' + fasta_file + ' ' + output_dir)
-os.system('cp ' + methylation_file + ' ' + output_dir)
-
-# print(methylation_seqids_tmp, genomic_seqids_tmp, fasta_headers_tmp)
-
-
-
-
-
-# - - - - - - - - - - - - README - - - - - - - - - - - #
-# Write a README.txt file with all the informations to #
-# proceed the MeStudio processing pipeline.            #
-# - - - - - - - - - - - - - - - - - - - - - - - - - -- #
-
-# readmepath = output_dir + '/' + 'README.txt'
-# readme_file = open(readmepath,'w')
-# text = 'Hello, World!'
-# readme_file.write(text)
-# readme_file.close()
+## Rename the temporary files as the originals
+print("Renaming and saving your files to the output directory")
+os.rename(temporary_genomic, path_out + '/' + name_fasta)
+os.rename(temporary_annotation, path_out + '/' + name_anno)
+os.rename(temporary_methylation, path_out + '/' + name_smart)
+print("[OK]")
+print("Pre-filtering has been successfully termined.")
+print("Thank you for using MeStudio ReplacR, enjoy the rest of the pipeline.")
+print("\n")
 
 
 
