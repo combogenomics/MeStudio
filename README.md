@@ -16,9 +16,6 @@ Mandatory arguments
 -Me   <str>           methylated base calls file
 -mo   <str>           newline delimited motifs list
 -out  <str>           output directory
-
-Optional arguments
--rr   <str>          "gene_presence_absence.csv" file produced by Roary
 ```
 
 If you are using *MeStudio*, please [cite our work](https://doi.org/10.3390/ijms24010159)
