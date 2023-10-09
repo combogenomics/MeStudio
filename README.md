@@ -193,7 +193,7 @@ Jump to the *Results* chapter to see the results produced by *MeStudio*.
 ## MeStudio ReplacR
 In order to properly run *MeStudio Core*, a pre-processing python-based script named *ms_replacR* has been implemented and is highly suggested to be used. You can find the source code here.
 *ms_replacR* expects four arguments:
-1. `-out`: *output directory*, in which results and log files will be written
+1. `-o`: *output directory*, in which results and log files will be written
 2. `-anno`: *genomic annotation*, in the GFF3 format
 3. `-smart`: *methylation annotation*, a sequencer-produced modified base calls in the GFF3 format
 4. `-f`: *genomic sequence*, in .fasta or .fna file format
@@ -236,7 +236,7 @@ usage: ms_replacR.py [-h] [-out OUTPUTDIR] [-anno GENOMIC] [-f FASTA] [-smart ME
 optional arguments:
   -h, --help            show this help message and exit
   
-  -out OUTPUTDIR, --outputdir OUTPUTDIR
+  -o OUTPUTDIR, --outputdir OUTPUTDIR
                         path to new files directory
   -anno GENOMIC, --genomic GENOMIC
                         path to file produced by genomic annotator [GFF-file]
