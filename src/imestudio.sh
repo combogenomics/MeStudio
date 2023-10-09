@@ -7,8 +7,7 @@
 ## Linux script provided by Univeristy of Florence; The Florence Computational Biology Group;
 ## https://www.bio.unifi.it/vp-175-our-research.html
 
-INSTALLATION_DIR=/Users/jake/greedisland/toolkit/MeStudio/src
-#MD5="6b5b40be4a3cbb5d12b5744a7174b781"
+INSTALLATION_DIR=
 replacer="$INSTALLATION_DIR/ms_replacR.py"
 mscheck="$INSTALLATION_DIR/mscheck"
 msmine="$INSTALLATION_DIR/msmine"
@@ -83,7 +82,7 @@ fi
 
 set -- "${POSITIONAL_ARGS[@]}"
 
-python3.9 "$replacer" -out "$OUTPUT_DIR" -anno "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -smart "$METHYLATION_GFF"
+python3 "$replacer" -out "$OUTPUT_DIR" -anno "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -smart "$METHYLATION_GFF"
 
 base_genomic_gff=$(basename "$GENOMIC_GFF")
 base_methylation_gff=$(basename "$METHYLATION_GFF")
@@ -103,31 +102,19 @@ echo $GENOMIC_FASTA
 echo $METHYLATION_GFF
 
 
-# "$mscheck" -g "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -m "$METHYLATION_GFF" -o mscore --mo "$MOTIFS_FILE" --type CDS
-# "$msmine" mscore/params.ms
-# "$msfasta" mscore/params.ms
-# "$msmatch" mscore/params.ms
-# "$msx" mscore/params.ms
+"$mscheck" -g "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -m "$METHYLATION_GFF" -o mscore --mo "$MOTIFS_FILE" --type CDS
+"$msmine" mscore/params.ms
+"$msfasta" mscore/params.ms
+"$msmatch" mscore/params.ms
+"$msx" mscore/params.ms
 
-# cd mscore
+cd mscore
 # rm *.ms
 # # mapfile -t motifs< <(sed 's/\r//g' "$MOTIFS_FILE" | sort | uniq)
-# for motif in *; do
-#   echo $motif
-#   cd $motif
-#   python3.9 "$analyzer" -o "msa" -CDS "$motif"_CDS.gff -nCDS "$motif"_nCDS.gff -tIG "$motif"_true_intergenic.gff -US "$motif"_upstream.gff -anno $GENOMIC_GFF -s > out.txt
-#   cd ..
-# done
-
-
-
-
-# cat $MOTIFS_FILE | while read line; do
-# 	echo Working on Motif: "$line"
-# 	cd "$line"
-# 	python3.9 "$analyzer" -o "msa" -CDS "$line""_CDS.gff" -nCDS "$line""_nCDS.gff" -tIG "$line""_true_intergenic.gff" -US "$line""_upstream.gff" -anno "$GENOMIC_GFF" -s > out.txt
-# 	# cd results
-# 	# Rscript "$circ"
-# 	# cd ..
-# 	cd ..
-# done
+for motif in *; do
+    cd $motif
+    python3 "$analyzer" -o "msa" -CDS "$motif"_CDS.gff -nCDS "$motif"_nCDS.gff -tIG "$motif"_true_intergenic.gff -US "$motif"_upstream.gff -anno $GENOMIC_GFF -s
+    cd msa
+    Rscript "$circ"
+    cd ../../
+done
