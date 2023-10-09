@@ -1,1 +1,5 @@
-
+`FSMMA_genomic.fasta`: DNA sequence
+`FSMMA_anno.gff`: Prokka produced annotation file in GFF3 format
+`FSMMA_smart.gff`: methylation data from SMRT Link PacBio in GFF3 format
+`motiflist.txt`: newline delimited text file with DNA motifs to be searched
+`gene_presence_abscence.csv`: CSV file produced by Roary with core and cloud annotation
