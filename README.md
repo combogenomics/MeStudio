@@ -8,14 +8,14 @@ MeStudio connects several procedural software components that can be run either 
 When you run MeStudio as a pipeline (see *Installing MeStudio*, `./mestudio -h`) it automatically calls all the scripts and executables it needs to perform genome-wide methylation profiles analysis. Running MeStudio this way is fairly easy:
 
 ```
-Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str>]
+Usage: mestudio -f <str> -anno <str> -smart <str> -mo <str> -out <str>
 
 Mandatory arguments
--f    <str>           genomic sequence file
--g    <str>           genomic annotation file
--Me   <str>           methylated base calls file
--mo   <str>           newline delimited motifs list
--out  <str>           output directory
+-f      <str>           genomic sequence file
+-anno   <str>           genomic annotation file
+-smart  <str>           methylated base calls file
+-mo     <str>           newline delimited motifs list
+-out    <str>           output directory
 ```
 
 If you are using *MeStudio*, please [cite our work](https://doi.org/10.3390/ijms24010159)
@@ -25,7 +25,8 @@ If you are using *MeStudio*, please [cite our work](https://doi.org/10.3390/ijms
 ## Table of Contents
 
 - [Dependencies](#Dependencies)
-- [Installing MeStudio](#Installing-MeStudio)
+- [Installing MeStudio for Linux](#Installing-MeStudio)
+- [Installing MeStudio for Mac](#Installing-MeStudio-(Mac-OSX-users))
 - [MeStudio ReplacR](#MeStudio-ReplacR)
 - [MeStudio Core](#MeStudio-Core)
 - [MeStudio AnalyzR](#MeStudio-AnalyzR)
@@ -81,7 +82,7 @@ Or from GitHub:
 devtools::install_github("jokergoo/circlize")
 ```
 
-## Installing MeStudio
+## Installing MeStudio (Linux users)
 
 You have to render `install` executable by typing:
 ```
@@ -93,32 +94,32 @@ sudo ./install
 ```
 If you don't have the administrator privileges, please add the directory in which executables are present to the `$PATH`. [Here](https://linuxize.com/post/how-to-add-directory-to-path-in-linux/) you can find how to do it.
 
-Ok, now you're ready to launch `mestudio`. Simply type:
+## Installing MeStudio (Mac OSX users)
+
+Ok, now you're ready to launch `mestudio` (or `imestudio` for OSX users). Simply type:
 ```
 mestudio
 ```
 And you'll get:
 ```
-Usage: mestudio -f <str> -g <str> -Me <str> -mo <str> -out <str> [-rr <str>]
+Usage: mestudio -f <str> -anno <str> -smart <str> -mo <str> -out <str>
 
 Mandatory arguments
--f    <str>           genomic sequence file
--g    <str>           genomic annotation file
--Me   <str>           methylated base calls file
--mo   <str>           newline delimited motifs list
--out  <str>           output directory
-
-Optional arguments
--rr   <str>          "gene_presence_absence.csv" file produced by Roary
+-f      <str>           genomic sequence file
+-anno   <str>           genomic annotation file
+-smart  <str>           methylated base calls file
+-mo     <str>           newline delimited motifs list
+-out    <str>           output directory
 ```
+
 Please feel free to use the files contained in the [dataset](/dataset/) folder to start a trial analysis or you can directly use your own.
 Inside the [dataset](/dataset/) folder you are going to find the three files needed to start the analysis:
 
 ```FSMMA_genomic.fna``` is the the genome of FSMMA strain of *Sinorhizobium meliloti*. You can get more information [here](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/382/?utm_source=None&utm_medium=referral&utm_campaign=KnownItemSensor:taxname).
 
-```FSMMA_genomic.gff``` is the product of the genomic annotation (executed via [Prokka](https://github.com/tseemann/prokka) annotator). The file is reported in GFF3 format.
+```FSMMA_anno.gff``` is the product of the genomic annotation (executed via [Prokka](https://github.com/tseemann/prokka) annotator). The file is reported in GFF3 format.
 
-```FSMMA_methylation.gff``` is the GFF3 file with methylation positions obtained through the sequencer. We performed the analysis using the PacBio RT-SMRT sequencing.
+```FSMMA_smart.gff``` is the GFF3 file with methylation positions obtained through the sequencer. We performed the analysis using the PacBio RT-SMRT sequencing.
 
 N.B. please note that Prokka and Roary (see *Installing MeStudio*) can be easily found to [Galaxy](https://usegalaxy.org), the installation of these tools is not strictly needed.
 
@@ -126,27 +127,22 @@ Once this is done, you are going to find all the results inside the directory yo
 
 ```
 ├── FSMMA_genomic.fasta
-├── FSMMA_genomic.gff
-├── FSMMA_methylation.gff
-├── gene_presence_absence.csv
+├── FSMMA_anno.gff
+├── FSMMA_smart.gff
 ├── motifs.txt
-└── replout
-    ├── core
+└── msr
+    ├── mscore
     │   ├── GANTC
     │   │   ├── GANTC_CDS.gff
     │   │   ├── GANTC.ms
     │   │   ├── GANTC_nCDS.gff
-    │   │   ├── GANTC_true_intergenic.gff
+    │   │   ├── GANTC_true_intergeni.gff
     │   │   ├── GANTC_upstream.gff
-    │   │   └── results
+    │   │   └── msa
     │   │       ├── output_CDS.bed
-    │   │       ├── output_intergenic.bed
+    │   │       ├── output_tIG.bed
     │   │       ├── output_nCDS.bed
-    │   │       ├── output_upstream.bed
-    │   │       ├── results_cds_scatterplot.png
-    │   │       ├── results_intergenic_scatterplot.png
-    │   │       ├── results_ncds_scatterplot.png
-    │   │       ├── results_upstream_scatterplot.png
+    │   │       ├── output_US.bed
     │   │       └── Rplots.pdf
     │   ├── genomic_fasta.ms
     │   ├── genomic.ms
@@ -160,13 +156,11 @@ Once this is done, you are going to find all the results inside the directory yo
 
 ```
 Where:
-`FSMMA_genomic.fasta`, `FSMMA_genomic.gff`, `FSMMA_methylation.gff` are the files containing respectevely the genome, genome's annotation and methylation data. 
-
-`gene_presence_absence.csv` is the file produced by Roary with proteins annotation.
+`FSMMA_genomic.fasta`, `FSMMA_anno.gff`, `FSMMA_smart.gff` are the files containing respectevely the genome, genome's annotation and smart sequencing methylation data. 
 
 `motifs.txt` is the text file containing all the motifs you want to look for in the genome. In the above example we used GANTC motif only.
 
-`replout`, `core`, `results` are the directories created respectively from `ms_replacR`, `ms_core` and `ms_analyzR`. Inside these folders you can find the newly produced tabular files as GFFs and BEDs.
+`msr`, `mscore`, `msa` are the directories created respectively from `ms_replacR`, `ms_core` and `ms_analyzR`. Inside these folders you can find the newly produced tabular files as GFFs and BEDs.
 
 All the files with `.ms` extension are produced by `ms_core`.
 
@@ -176,10 +170,10 @@ Jump to the *Results* chapter to see the results produced by *MeStudio*.
 ## MeStudio ReplacR
 In order to properly run *MeStudio Core*, a pre-processing python-based script named *ms_replacR* has been implemented and is highly suggested to be used. You can find the source code here.
 *ms_replacR* expects four arguments:
-1. *output directory*, in which results and log files will be written
-2. *genomic annotation*, in the GFF3 format
-3. *methylation annotation*, a sequencer-produced modified base calls in the GFF3 format
-4. *genomic sequence*, in fasta or fna file format
+1. `-out`: *output directory*, in which results and log files will be written
+2. `-anno`: *genomic annotation*, in the GFF3 format
+3. `-smart`: *methylation annotation*, a sequencer-produced modified base calls in the GFF3 format
+4. `-f`: *genomic sequence*, in .fasta or .fna file format
 
 As a matter of fact MeStudio requires consistent formatting as far as the sequence identifiers are concerned but sometimes the annotation process can lead to genomic headers alterations. By default, *ms_replacR* changes pipe symbol with the underscore for what concerns “seqid” fields identity and makes sure that numbers and quality of the contigs reported on your file are good.
 
@@ -192,7 +186,7 @@ An example is reported below:
 > GCCGGTCCAGCGCAAAACCCTCGCTCGGCGTGATCGAGAGTATGCGCTGCGAGCCGAGGT
 > CGGGCCAGAAGAGCTTCGAATTCACGAGCCGGAAATGCGGTGCGACGATAACGCGTTCGA
 
-```FSMMA_genomic.gff```
+```FSMMA_anno.gff```
 
 
 | 000000F_arrow | Prodigal:2.6 | CDS | 95 | 538 | . | + | 0 | ID=JPHAALHC_00001 |
@@ -214,18 +208,18 @@ After the installation, in order to check the *ms_replacR* usage, you can run:
 ```
 python3.8 ms_replacR.py --help
 
-usage: ms_replacR.py [-h] [-out OUTPUTDIR] [-g GENOMIC] [-f FASTA] [-Me METHYLATION]
+usage: ms_replacR.py [-h] [-out OUTPUTDIR] [-anno GENOMIC] [-f FASTA] [-smart METHYLATION]
 
 optional arguments:
   -h, --help            show this help message and exit
   
   -out OUTPUTDIR, --outputdir OUTPUTDIR
                         path to new files directory
-  -g GENOMIC, --genomic GENOMIC
+  -anno GENOMIC, --genomic GENOMIC
                         path to file produced by genomic annotator [GFF-file]
   -f FASTA, --fasta FASTA
                         path to genome file [FASTA/FNA-file]
-  -Me METHYLATION, --methylation METHYLATION
+  -smart METHYLATION, --methylation METHYLATION
                         path to file produced by the sequencer [GFF-file]
  ```
 
@@ -302,71 +296,64 @@ Here's the mandatory and optional fields required:
 ```
 usage: ms_analyzR.py [-h] [-out OUTPUTDIR] [-rr ROARY] [-cds CODING] [-ncds NONCODING] [-inter INTERGENIC] [-ups UPSTREAM] [-prt] [-split]
 
-optional arguments:
   -h, --help            show this help message and exit
-  -out OUTPUTDIR, --outputdir OUTPUTDIR
+  -o OUTPUTDIR, --outputdir OUTPUTDIR
                         path to your output files
-  -rr ROARY, --roary ROARY
-                        path to ROARY gene_presence_abscence.csv file (OPTIONAL)
-  -cds CODING, --coding CODING
+  -CDS CODING, --coding CODING
                         MOTIF_CDS.gff file
-  -ncds NONCODING, --noncoding NONCODING
+  -nCDS NONCODING, --noncoding NONCODING
                         MOTIF_nCDS.gff file
-  -inter INTERGENIC, --intergenic INTERGENIC
+  -tIG INTERGENIC, --intergenic INTERGENIC
                         MOTIF_true_intergenic.gff file
-  -ups UPSTREAM, --upstream UPSTREAM
+  -US UPSTREAM, --upstream UPSTREAM
                         MOTIF_upstream.gff file
-  -bed, --make_bed       Write in [OUT] tabular per-feature file ready for RCircos (OPTIONAL)
-  -split, --split_by_chromosome
-                        Rearrange your input GFFs for chromosomes (OPTIONAL)
+optional arguments:
+  -chr, --make_chrom    Rearrange your input GFFs for chromosomes
+  -s, --strict          If used, this flag stops the analysis when 0 methylations are found in the GFF3.
+  -r, --roary           path to 'gene_presence_abscence.csv' file produced by Roary
+  -q, --quiet           Running ms analyzR quietly (no stdout)
 ```
-The `-split` flag saves into the output directory the GFFs at “chromosome level” rather than “feature level”. Each GFF produced will be characterized not for feature (CDS, nCDS, true intergenic and upstream) but by chromosomes (or contigs), maintaining the MeStudio Core derived contents and layout. 
-
-The `-bed` flag produces a BED file for each feature in which is reported: 
-- the chrom column, with the name of each chromosome or contig
-- start of the feature
-- end of the feature
-- the name of the ID found in that interval
-- the number of methylations found for ID
-- the protein product of the ID
- 
-As well as being significant, the information contained in BED files are directly related to an R script (see [src](/src/)) which plots the distribution of the methylation density for each feature analysed making use of the r-package [circlize](https://jokergoo.github.io/circlize_book/book/). 
+`-chr` flag saves into the output directory the GFFs at “chromosome level” rather than “feature level”. Each GFF produced will be characterized not for feature (CDS, nCDS, true intergenic and upstream) but by chromosomes (or contigs), maintaining the MeStudio Core derived contents and layout. 
+`-s` is strict mode, it's highly suggested to be run and stops the analysis when the GFF3 has no methylations found for that specific motif.
+`-r` it's used to read the "gene_presence_abscence.csv" file produced by Roary which allows to know if a specific gene is part of the core or cloud genome.
+`-q` for having no stdout.
 
 ## Results
 
-`ms_analyzR` produces four different type of results: statistics, tabular, distributions and circular plot.
-
-Below are reported these results.
+`ms_analyzR` produces four different type of results: statistics, tabular files and circular plot.
 
 *Statistics*
+A stdout log is provided for each searched motif. Here there's an example for the GANTC motif.
 ```
-Total number of FOUND genes: 7159
-Parsing -cds file..
-	 Total number of METHYLATED genes: 4193 (58.57 %)
-	 Total number of METHYLATIONS found: 8721
-	 Max number of methylations found: 17 on gene JPHAALHC_06173
-	 Roary annotation: JPHAALHC_06173 = hypothetical protein -> Core genome
+Creating the msa folder ..
 
 
-Parsing -ncds file..
-	 Total number of METHYLATED genes: 4193 (58.57 %)
-	 Total number of METHYLATIONS found: 8726
-	 Max number of methylations found: 17 on gene JPHAALHC_06173
-	 Roary annotation: JPHAALHC_06173 = hypothetical protein -> Core genome
+Parsing the GANTC on CDS
+Number of GANTCs found: 6558
+Number of methylated GANTCs found: 6459
+Ratio: 0.9849
+Highest Methylated Gene: JLDKHMGJ_06681 with 14 methylated GANTCs
 
 
-Parsing -inter file..
-	 Total number of METHYLATED regions: 1590 (22.21 %)
-	 Total number of METHYLATIONS found: 2500
-	 Max number of methylations found: 14 on gene JPHAALHC_02514
-	 Roary annotation: JPHAALHC_02514 = Acetoacetyl-CoA reductase -> Core genome
+Parsing the GANTC on nCDS
+Number of GANTCs found: 6561
+Number of methylated GANTCs found: 6470
+Ratio: 0.9861
+Highest Methylated Gene: JLDKHMGJ_06681 with 14 methylated GANTCs
 
 
-Parsing -ups file..
-	 Total number of METHYLATED regions: 2719 (37.98 %)
-	 Total number of METHYLATIONS found: 13761
-	 Max number of methylations found: 84 up to gene JPHAALHC_03228
-	 Roary annotation: JPHAALHC_03228 = Motility protein A -> Core genome
+Parsing the GANTC on tIG
+Number of GANTCs found: 6141
+Number of methylated GANTCs found: 2138
+Ratio: 0.3482
+Highest Methylated Gene: JLDKHMGJ_00735 with 15 methylated GANTCs
+
+
+Parsing the GANTC on US
+Number of GANTCs found: 18837
+Number of methylated GANTCs found: 10738
+Ratio: 0.57
+Highest Methylated Gene: JLDKHMGJ_04693 with 48 methylated GANTCs
 ```
 
 *Tabular*
@@ -381,12 +368,6 @@ Parsing -ups file..
 | 000000F_arrow | 12999 | 16460 | JPHAALHC_00014 | 3 | Chromosome partition protein Smc
 | ... | ... | ... | ... | ... | ... |
 
-*Distributions*
-
-![GCRDB_analyzed_cds_scatterplot](https://user-images.githubusercontent.com/97732011/161234235-57dd01c5-e8d3-40c0-aa8f-b5c3c253b9b5.png)
-![GCRDB_analyzed_ncds_scatterplot](https://user-images.githubusercontent.com/97732011/161234359-26af5ea3-babf-4546-869e-b7991c910dae.png)
-![GCRDB_analyzed_intergenic_scatterplot](https://user-images.githubusercontent.com/97732011/161234268-556c97dc-2356-449c-a34d-5a22c5873f6a.png)
-![GCRDB_analyzed_upstream_scatterplot](https://user-images.githubusercontent.com/97732011/161234407-9d0695ff-bcb7-48c1-9363-9fb47b4fa6c5.png)
 
 *Circular plot*
 
