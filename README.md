@@ -96,10 +96,10 @@ If you don't have the administrator privileges, please add the directory in whic
 
 ## Installing MeStudio (Mac OSX users)
 
-You easily run MeStudio on Max OSX by using `imestudio.sh` but before starting there's a two steps passage to be done.
+You easily run MeStudio on Max OSX by using `imestudio` but before starting there's a two steps passage to be done.
 Please manually add the path of the folder in which you want to locate MeStudio by typing:
 ```
-nano imestudio.sh
+nano imestudio
 ```
 In the `INSTALLATION_DIR=` (line 10) you can add your path.
 ```
@@ -118,7 +118,7 @@ Save your changes (`ctrl + o` and then `ctrl + x` for closing the editor) and yo
 Please, make sure you have `greadlink` installed.
 
 
-Ok, now you're ready to launch `mestudio` (or `imestudio.sh` for OSX users). From now on, the code shown is the Linux one.
+Ok, now you're ready to launch `mestudio` (or `imestudio` for OSX users). From now on, the code shown is the Linux one.
 Simply type:
 ```
 mestudio
