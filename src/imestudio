@@ -107,9 +107,8 @@ GENOMIC_FASTA=$(greadlink -m "$base_genomic_fasta")
 cd mscore
 rm *.ms
 for motif in *; do
-  echo $motif
   cd $motif
-  python3.9 "$analyzer" -o "msa" -CDS "$motif"_CDS.gff -nCDS "$motif"_nCDS.gff -tIG "$motif"_true_intergenic.gff -US "$motif"_upstream.gff -anno $GENOMIC_GFF -s > out.txt
+  python3.9 "$analyzer" -o "msa" -CDS "$motif"_CDS.gff -nCDS "$motif"_nCDS.gff -tIG "$motif"_true_intergenic.gff -US "$motif"_upstream.gff -anno $GENOMIC_GFF -s
   cd msa
   Rscript "$circ" 
   cd ../../
