@@ -96,7 +96,25 @@ If you don't have the administrator privileges, please add the directory in whic
 
 ## Installing MeStudio (Mac OSX users)
 
-You easily use MeStudio on Max OSX by running `imestudio` (WIP). 
+You easily run MeStudio on Max OSX by using `imestudio` but before starting there's a two steps passage to be done.
+Please manually add the path of the folder in which you want to locate MeStudio by typing:
+```
+nano imestudio
+```
+In the `INSTALLATION_DIR=` (line 10) you can add your path.
+```
+#!/bin/bash
+
+## installation_dir holds the entire path to the scripts and binaries
+## You either install automatically, or manually.
+## When installing manually make sure you also add the installation directory
+## to your PATH [https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path]
+## Linux script provided by University of Florence; The Florence Computational Biology Group;
+## https://www.bio.unifi.it/vp-175-our-research.html
+
+INSTALLATION_DIR=/insert/your/path
+```
+Save your changes (`ctrl + o` and then `ctrl + x` for closing the editor) and you're done!
 
 Ok, now you're ready to launch `mestudio` (or `imestudio` for OSX users). Simply type:
 ```
