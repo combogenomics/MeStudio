@@ -7,7 +7,7 @@
 ## Linux script provided by Univeristy of Florence; The Florence Computational Biology Group;
 ## https://www.bio.unifi.it/vp-175-our-research.html
 
-INSTALLATION_DIR=/Users/jake/greedisland/toolkit/MeStudio/src
+INSTALLATION_DIR=
 #MD5="6b5b40be4a3cbb5d12b5744a7174b781"
 replacer="$INSTALLATION_DIR/ms_replacR.py"
 mscheck="$INSTALLATION_DIR/mscheck"
@@ -110,8 +110,7 @@ for motif in *; do
   echo $motif
   cd $motif
   python3.9 "$analyzer" -o "msa" -CDS "$motif"_CDS.gff -nCDS "$motif"_nCDS.gff -tIG "$motif"_true_intergenic.gff -US "$motif"_upstream.gff -anno $GENOMIC_GFF -s > out.txt
-  # cd msa
-	# Rscript "$circ" 
-  # cd ..
-  cd ..
+  cd msa
+  Rscript "$circ" 
+  cd ../../
 done
