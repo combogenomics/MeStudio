@@ -25,8 +25,8 @@ If you are using *MeStudio*, please [cite our work](https://doi.org/10.3390/ijms
 ## Table of Contents
 
 - [Dependencies](#Dependencies)
-- [Installing MeStudio for Linux](#Installing-MeStudio)
-- [Installing MeStudio for Mac](#Installing-MeStudio-(Mac-OSX-users))
+- [Installing MeStudio for Linux](#Installing-MeStudio-(-Linux-users-))
+- [Installing MeStudio for Mac](#Installing-MeStudio-(-Mac-OSX-users-))
 - [MeStudio ReplacR](#MeStudio-ReplacR)
 - [MeStudio Core](#MeStudio-Core)
 - [MeStudio AnalyzR](#MeStudio-AnalyzR)
