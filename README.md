@@ -1,6 +1,6 @@
 # MeStudio
 
-![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white) ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white) ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
 
 MeStudio is a tool which allows us to analyse and combine genome-wide methylation profiles with genomic features.
 MeStudio connects several procedural software components that can be run either individually or as part of a pipeline.
@@ -115,8 +115,11 @@ In the `INSTALLATION_DIR=` (line 10) you can add your path.
 INSTALLATION_DIR=/insert/your/path
 ```
 Save your changes (`ctrl + o` and then `ctrl + x` for closing the editor) and you're done!
+Please, make sure you have `greadlink` installed.
 
-Ok, now you're ready to launch `mestudio` (or `imestudio.sh` for OSX users). Simply type:
+
+Ok, now you're ready to launch `mestudio` (or `imestudio.sh` for OSX users). From now on, the code shown is the Linux one.
+Simply type:
 ```
 mestudio
 ```
