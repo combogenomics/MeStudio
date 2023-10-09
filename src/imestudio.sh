@@ -57,7 +57,7 @@ while [[ $# -gt 0 ]]; do
       ((argc++))
       ;;
     -o)
-      OUTPUT_DIR="$2"
+      OUTPUT_DIR=$(greadlink -m "$2")
       shift
       shift
       ((argc++))
@@ -82,7 +82,7 @@ fi
 
 set -- "${POSITIONAL_ARGS[@]}"
 
-python3 "$replacer" -out "$OUTPUT_DIR" -anno "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -smart "$METHYLATION_GFF"
+python3.9 "$replacer" -o "$OUTPUT_DIR" -anno "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -smart "$METHYLATION_GFF"
 
 base_genomic_gff=$(basename "$GENOMIC_GFF")
 base_methylation_gff=$(basename "$METHYLATION_GFF")
@@ -90,17 +90,12 @@ base_genomic_fasta=$(basename "$GENOMIC_FASTA")
 
 cd "$OUTPUT_DIR"
 
-# GENOMIC_GFF=$(greadlink -m "$base_genomic_gff")
-# METHYLATION_GFF=$(greadlink -m "$base_methylation_gff")
-# GENOMIC_FASTA=$(greadlink -m "$base_genomic_fasta")
-GENOMIC_GFF=$(*"_anno.gff")
-METHYLATION_GFF=$(*"_smart.gff")
-GENOMIC_FASTA=$(*"_genomic.gff")
-
-echo $GENOMIC_GFF
-echo $GENOMIC_FASTA
-echo $METHYLATION_GFF
-
+GENOMIC_GFF=$(greadlink -m "$base_genomic_gff")
+METHYLATION_GFF=$(greadlink -m "$base_methylation_gff")
+GENOMIC_FASTA=$(greadlink -m "$base_genomic_fasta")
+# GENOMIC_GFF=$(*"_anno.gff")
+# METHYLATION_GFF=$(*"_smart.gff")
+# GENOMIC_FASTA=$(*"_genomic.gff")
 
 "$mscheck" -g "$GENOMIC_GFF" -f "$GENOMIC_FASTA" -m "$METHYLATION_GFF" -o mscore --mo "$MOTIFS_FILE" --type CDS
 "$msmine" mscore/params.ms
