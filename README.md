@@ -96,6 +96,8 @@ If you don't have the administrator privileges, please add the directory in whic
 
 ## Installing MeStudio (Mac OSX users)
 
+You easily use MeStudio on Max OSX by running `imestudio` (WIP). 
+
 Ok, now you're ready to launch `mestudio` (or `imestudio` for OSX users). Simply type:
 ```
 mestudio
