@@ -317,7 +317,7 @@ In addition, for comparative genomic analyses a “gene_presence_abscence.csv”
 Here's the mandatory and optional fields required:
 
 ```
-usage: ms_analyzR.py [-h] [-out OUTPUTDIR] [-rr ROARY] [-cds CODING] [-ncds NONCODING] [-inter INTERGENIC] [-ups UPSTREAM] [-prt] [-split]
+usage: ms_analyzR.py [-h] [-o OUTPUTDIR] [-CDS CODING] [-nCDS NONCODING] [-tIG INTERGENIC] [-US UPSTREAM]
 
   -h, --help            show this help message and exit
   -o OUTPUTDIR, --outputdir OUTPUTDIR
